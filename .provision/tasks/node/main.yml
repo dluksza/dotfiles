@@ -1,0 +1,12 @@
+---
+- name: Install node
+  community.general.homebrew:
+    name: node
+
+- name: Install node globals
+  community.general.npm:
+    global: true
+    name: "{{ item }}"
+  loop:
+    - firebase-tools
+    - npm-check-updates

@@ -1,0 +1,16 @@
+---
+- name: Install Visual Studio Code
+  community.general.homebrew_cask:
+    name: visual-studio-code
+
+- name: VSCode Install extensions
+  shell:
+    cmd: code --install-extension {{ item }}
+  loop:
+    - Dart-Code.dart-code
+    - Dart-Code.flutter
+    - zhuangtongfa.Material-theme
+    - vscodevim.vim
+    - streetsidesoftware.code-spell-checker
+    - JakeBecker.elixir-ls
+    - pantajoe.vscode-elixir-credo

@@ -1,0 +1,16 @@
+---
+- shell:
+    cmd: test -e /Applications/Emacs.app
+  failed_when: false
+  register: has_emacs_app
+
+- name: Install Emacs 29
+  community.general.homebrew:
+    name: emacs-plus@29
+    install_options: with-native-comp,with-imagemagick,with-ctags
+
+- name: Link Emacs.app
+  shell:
+    cmd: osascript -e 'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-plus@29/Emacs.app" at POSIX file "/Applications"'
+  when:
+    - has_emacs_app != 0

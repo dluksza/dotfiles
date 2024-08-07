@@ -1,0 +1,42 @@
+---
+- name: Provision MacOs Development Environment
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Provision Settings
+      include_tasks: tasks/osx-settings/main.yml
+
+    - name: Install software
+      include_tasks: tasks/brew-install.yaml
+
+    - name: Change shell to zsh
+      ansible.builtin.user:
+        name: "{{ remote_regular_user }}"
+        shell: /opt/homebrew/bin/zsh
+
+    - name: Install stats
+      include_tasks: tasks/stats/main.yml
+
+    - name: Install Node
+      include_tasks: tasks/node/main.yml
+
+    - name: Install SDKMan
+      include_tasks: tasks/sdkman/main.yml
+
+    - name: Install Emacs
+      include_tasks: tasks/emacs/main.yml
+
+    - name: Install Visual Studio Code
+      include_tasks: tasks/vscode/main.yml
+
+    - name: Install FVM
+      include_tasks: tasks/fvm/main.yml
+
+    - name: Install Brave Browser
+      include_tasks: tasks/brave-browser/main.yml
+
+    - name: Create ~/workspace
+      ansible.builtin.file:
+        path: ~/workspace
+        state: directory

@@ -1,0 +1,90 @@
+---
+- name: Ensuring Homebrew Is Installed
+  stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_check
+
+- name: Installing Homebrew
+  shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  when:
+    - not homebrew_check.stat.exists
+
+- name: Add Homebrew to PATH
+  shell: "export PATH=$PATH:/opt/homebrew/bin/"
+  when:
+    - not homebrew_check.stat.exists
+
+- name: Add brew taps
+  community.general.homebrew_tap:
+    name:
+      - d12frosted/emacs-plus
+      - leoafarias/fvm
+      - qmk/qmk
+
+- name: Install brews
+  community.general.homebrew:
+    name:
+      - git
+      - git-lfs
+      - neovim
+      - zsh
+      - bat
+      - fzf
+      - cocoapods
+      - httpie
+      - jq
+      - podman
+      - pre-commit
+      - qmk
+      - tree
+      - awk
+      - elixir
+      - mas
+      - aspell
+      - hunspell
+      - maven
+      - bazelisk
+      - nmap
+      - watchman
+      - wget
+      - zsh-syntax-highlighting
+
+- name: Install casks
+  community.general.homebrew_cask:
+    name:
+      - spotify
+      - font-fira-code
+      - kitty
+      - font-sf-pro
+      - hammerspoon
+      - obsidian
+      - youtube-downloader
+      - google-chrome
+      # - google-backup-and-sync
+      - cleanmymac
+      - telegram
+      - zoom
+
+- name: Install packages from AppStore
+  community.general.mas:
+    id:
+      - 497799835 # Xcode
+      - 1291898086 # ToggleTrack
+      - 310633997 # WhatsApp
+
+- name: Uninstall unused Applications
+  community.general.mas:
+    state: absent
+    id:
+      - 408981434 # iMovie
+      - 409183694 # Keynote
+      - 409203825 # Numbers
+      - 409201541 # Pages
+      - 682658836 # GarageBand
+  become: true
+
+- name: Install Xcode system requirements
+  shell: xcodebuild -runFirstLaunch
+
+- name: Download iOS Platform
+  shell: xcodebuild -downloadPlatform iOS

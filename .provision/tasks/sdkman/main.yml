@@ -1,0 +1,18 @@
+---
+- stat:
+    path: ~/.sdkman
+  register: sdkman_check
+
+- name: Install SDKMan
+  shell: curl -s "https://get.sdkman.io" | bash
+  when: not sdkman_check.stat.exists
+
+- name: Setup SDKMan
+  shell: source ~/.sdkman/bin/sdkman-init.sh
+  when: not sdkman_check.stat.exists
+
+- name: SDKMan Java 21.0.4-tem
+  shell:
+    cmd: sdk install java 21.0.4-tem
+    executable: /bin/zsh
+  when: not sdkman_check.stat.exists

@@ -1,0 +1,412 @@
+---
+- name: Set Dark Mode
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleInterfaceStyle
+    value: Dark
+
+- name: Set Measurement Unit
+  community.general.osx_defaults:
+    domain: Apple General Domain
+    key: AppleMeasurementUnits
+    value: Centimeters
+
+- name: Set Accent Color
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleAccentColor
+    value: -1
+    type: int
+
+- name: Set Measurement Units to Centimeters
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleMeasurementUnits
+    value: Centimeters
+
+- name: Use Metric Units
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleMetricUnits
+    value: true
+    type: bool
+
+- name: Set Aqua Color Variant
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: ApplAquaColorVariant
+    value: 6
+    type: int
+
+- name: Set Highlight Color
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleHighlightColor
+    value: "0.847059 0.847059 0.862745 Graphite"
+
+- name: Set Scroller Paging Behaviour
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleScrollerPagingBehaviour
+    value: 1
+    type: int
+
+- name: Set Show Scroll Bars
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleShowScrollBars
+    value: WhenScrolling
+
+- name: Disable Touch ID for AppStore purchase
+  community.general.osx_defaults:
+    domain: "com.apple.AppleMediaServices"
+    key: AMSDeviceBiometricsState
+    value: 2
+    type: int
+
+- name: Set Languages
+  community.general.osx_defaults:
+    domain: ".GlobalPreferences_m"
+    key: AppleLanguages
+    value:
+      - en-GB
+      - pl-GB
+    type: array
+
+- name: Set Languages
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: ApplelLanguages
+    value:
+      - en-GB
+      - pl-GB
+    type: array
+
+- name: Set Key Repeat Rate
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: KeyRepeat
+    value: 2
+    type: float
+
+- name: Set Key Repeat Delay
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: InitialKeyRepeat
+    value: 15
+    type: float
+
+- name: Disable Auto Capitalization
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: NSAutomaticCapitalizationEnabled
+    value: false
+    type: bool
+
+- name: Disable Auto Dash Substitution
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: NSAutomaticDashSubstitutionEnabled
+    value: false
+    type: bool
+
+- name: Disable Auto Inline Prediction
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: NSAutomaticInlinePredictionEnabled
+    value: false
+    type: bool
+
+- name: Disable Auto Period Substitution
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: NSAutomaticPeriodSubstitutionEnabled
+    value: false
+    type: bool
+
+- name: Disable Auto Quote Substitution
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: NSAutomaticQuoteSubstitutionEnabled
+    value: false
+    type: bool
+
+- name: Disable Auto Spelling Correction
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: NSAutomaticSpellingCorrectionEnabled
+    value: false
+    type: bool
+
+- name: Set Function Keys to be Function Keys
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: "com.apple.keyboard.fnState"
+    value: false
+    type: bool
+
+- name: Disable Swipe Navigation
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleEnableSwipeNavigateWithScrolls
+    value: false
+    type: bool
+
+- name: Disable Force Click
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: "com.apple.trackpad.forceClick"
+    value: false
+    type: bool
+
+- name: Set Tracking Speed
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: "com.apple.trackpad.scaling"
+    value: 2.5
+    type: float
+
+- name: Disable Gestures
+  community.general.osx_defaults:
+    domain: "com.apple.AppleMultitouchTrackpad"
+    value: 0
+    type: int
+    key:
+      - TrackpadFiveFingerPinchGesture
+      - TrackpadFourFingerHorizSwipeGesture
+      - TrackpadFourFingerPinchGesture
+      - TrackpadFourFingerVertSwipeGesture
+      - TrackpadRotate
+      - TrackpadThreeFingerHorizSwipeGesture
+      - TrackpadThreeFingerTapGesture
+      - TrackpadThreeFingerVertSwipeGesture
+      - TrackpadTwoFingerFromFirghtEdgeSwipeGesture
+
+- name: Disable Gestures
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    value: 0
+    type: bool
+    key:
+      - showDesktpGestureEnabled
+      - showLaunchpadGestureEnabled
+      - showMissionControlGestureEnabled
+
+- name: Disable Gestures on Bluetooth Touchpad
+  community.general.osx_defaults:
+    domain: "com.apple.driver.AppleBluetoothMultitouch.trackpad"
+    value: 0
+    type: int
+    key:
+      - TrackpadFiveFingerPinchGesture
+      - TrackpadFourFingerHorizSwipeGesture
+      - TrackpadFourFingerPinchGesture
+      - TrackpadFourFingerVertSwipeGesture
+      - TrackpadRotate
+      - TrackpadThreeFingerHorizSwipeGesture
+      - TrackpadThreeFingerTapGesture
+      - TrackpadThreeFingerVertSwipeGesture
+      - TrackpadTwoFingerFromFirghtEdgeSwipeGesture
+
+- name: Hide Spotlight in Control Centre
+  community.general.osx_defaults:
+    domain: "com.apple.Spotlight"
+    key: "NSStatusItem Visible Item-0"
+    value: false
+    type: bool
+
+- name: Hide Airplay in Control Centre
+  community.general.osx_defaults:
+    domain: "com.apple.airplay"
+    key: showInMenuBarIfPresent
+    value: false
+    type: bool
+
+- name: Hide things in Control Center
+  community.general.osx_defaults:
+    domain: "com.apple.controlcenter"
+    value: 0
+    type: int
+    key:
+      - "NSStatusItem Visible Battery"
+      - "NSStatusItem Visible Item-0"
+      - "NSStatusItem Visible Item-1"
+      - "NSStatusItem Visible Item-2"
+      - "NSStatusItem Visible Item-3"
+      - "NSStatusItem Visible Item-4"
+      - "NSStatusItem Visible Item-5"
+      - "NSStatusItem Visible Item-6"
+      - "NSStatusItem Visible Item-0"
+
+- name: Show things in Control Center
+  community.general.osx_defaults:
+    domain: "com.apple.controlcenter"
+    value: 1
+    type: int
+    key:
+      - "NSStatusItem BentoBox"
+      - "NSStatusItem Bluetooth"
+      - "NSStatusItem Clock"
+      - "NSStatusItem FocusMode"
+      - "NSStatusItem Sound"
+      - "NSStatusItem WiFi"
+
+- name: Show Seconds in Clock
+  community.general.osx_defaults:
+    domain: "com.apple.menuextra.clock"
+    key: ShowSeconds
+    value: true
+    type: bool
+
+- name: Setup Dock
+  community.general.osx_defaults:
+    domain: "com.apple.WindowManager"
+    value: true
+    type: bool
+    key:
+      - AppWindowGroupingBehaviour
+      - AutoHide
+      - HideDesktop
+      - StageManagerHideWidgets
+      - StandardHideWidgets
+
+- name: Disable Click on Dock to Show Desktop
+  community.general.osx_defaults:
+    domain: "com.apple.WindowManager"
+    value: false
+    type: bool
+    key: EnableStandardClickToShowDekstop
+
+- name: Disable Remote Widgets
+  community.general.osx_defaults:
+    domain: "com.apple.chronod"
+    value: false
+    type: bool
+    key:
+      - effectiveRemoteEidgetsEnabled
+      - remoteWidgetsEnabled
+
+- name: Dock Autohide
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: autohide
+    value: true
+    type: bool
+
+- name: Dock Size
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: largesize
+    value: 64
+    type: float
+
+- name: Dock Magnification
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: magnification
+    value: true
+    type: bool
+
+- name: Dock mod-count
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: "mod-count"
+    value: 8
+    type: int
+
+- name: Dock mru-spaces
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: "mru-spaces"
+    value: 0
+    type: int
+
+- name: Dock Location
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: "orientation"
+    value: right
+
+- name: Dock Recent Apps
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: "recent-apps"
+    value: []
+    type: array
+
+- name: Dock Hide Recent Apps
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: "show-recent"
+    value: false
+    type: bool
+
+- name: Dock Tile Size
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: tilesize
+    value: 28
+    type: float
+
+- name: Dock Hot Corners 1
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: "wvous-br-corner"
+    value: 1
+    type: int
+
+- name: Dock Hot Corners 2
+  community.general.osx_defaults:
+    domain: "com.apple.dock"
+    key: "wvous-br-modifier"
+    value: 0
+    type: int
+
+- name: Disable AirDrop
+  community.general.osx_defaults:
+    domain: "com.apple.sharingd"
+    key: DiscoverableMode
+    value: Off
+
+- name: Finder Show Extensions
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: AppleShowAllExtensions
+    value: true
+    type: bool
+
+- name: Finder Disable Open in Tabs
+  community.general.osx_defaults:
+    domain: "com.apple.finder"
+    key: FinderSpawnTab
+    value: false
+    type: bool
+
+- name: Finder New Window Target
+  community.general.osx_defaults:
+    domain: "com.apple.finder"
+    key: NewWindowTarget
+    value: PfHm
+
+- name: Finder New Window Path
+  community.general.osx_defaults:
+    domain: "com.apple.finder"
+    key: NewWindowTargetPath
+    value: "file:///Users/lock/"
+
+- name: Finder Last Selection
+  community.general.osx_defaults:
+    domain: "com.apple.finder"
+    key: "PreferencesWindow.LastSelection"
+    value: SDBR
+
+- name: Finder Show things
+  community.general.osx_defaults:
+    domain: "com.apple.finder"
+    value: true
+    type: bool
+    key:
+      - ShowMountedServersOnDesktop
+      - ShowPathbar
+      - ShowStatusBar
+      - SidebarTagsSectionDisclosedState

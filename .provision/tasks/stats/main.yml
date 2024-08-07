@@ -1,0 +1,105 @@
+---
+- name: Install stats
+  community.general.homebrew_cask:
+    name: stats
+
+- name: Configure stats
+  community.general.osx_defaults:
+    domain: "eu.exelban.Stats"
+    key: "{{ item.name }}"
+    value: "{{ item.value }}"
+    type: "{{ item.type }}"
+  loop:
+    - name: Battery_battery_additional
+      value: timeAndPercentage
+      type: string
+    - name: CPU_barChart_position
+      value: 3
+      type: int
+    - name: CPU_lineChart_position
+      value: 1
+      type: int
+    - name: CPU_line_chart_box
+      value: 0
+      type: int
+    - name: CPU_line_chart_color
+      value: utilization
+      type: string
+    - name: CPU_line_chart_historyCount
+      value: 30
+      type: int
+    - name: CPU_mini_color
+      value: utilization
+      type: string
+    - name: CPU_mini_position
+      value: 0
+      type: int
+    - name: CPU_oneView
+      value: 1
+      type: int
+    - name: CPU_pieChart_position
+      value: 4
+      type: int
+    - name: CPU_tachometer_position
+      value: 5
+      type: int
+    - name: CPU_widget
+      value: "mini,line_chart"
+      type: string
+    - name: GPU_state
+      value: 0
+      type: int
+    - name: "NSStatusItem Preferred Position Battery_battery"
+      value: 216
+      type: int
+    - name: "NSStatusItem Preferred Position CPU"
+      value: 408
+      type: int
+    - name: "NSStatusItem Preferred Position Disk_mini"
+      value: 532
+      type: int
+    - name: "NSStatusItem Preferred Position Network_speed"
+      value: 579
+      type: int
+    - name: "NSStatusItem Preferred Position RAM_mini"
+      value: 485
+      type: int
+    - name: "NSStatusItem Preferred Position Sensors_sensors"
+      value: 650
+      type: int
+    - name: RAM_mini_color
+      value: pressure
+      type: string
+    - name: LaunchAtLoginNext
+      value: 1
+      type: int
+    - name: Sensors_hid
+      value: 1
+      type: int
+    - name: Sensors_sensors_monospacedFont
+      value: 1
+      type: int
+    - name: Sensors_sensors_size
+      value: 1
+      type: int
+    - name: Sensors_state
+      value: 1
+      type: int
+    - name: runAtLoginInitialized
+      value: 1
+      type: int
+    - name: sensor_PSTR
+      value: 0
+      type: int
+    - name: sensor_TB1T
+      value: 0
+      type: int
+    - name: sensor_TW0P
+      value: 1
+      type: int
+    - name: "sensor_eACC MTR Temp Sensor"
+      value: 1
+      type: int
+    - name: "sensor_gas gauge battery"
+      value: 0
+      type: int

@@ -1,0 +1,23 @@
+---
+- name: Install FVM
+  community.general.homebrew:
+    name: fvm
+
+- name: FVM install stable version
+  shell:
+    cmd: fvm install stable --setup
+
+- name: FVM install beta version
+  shell:
+    cmd: fvm install beta --setup
+
+- name: FVM set beta as global
+  shell:
+    cmd: fvm global beta
+
+- name: FVM Install Melos
+  shell:
+    cmd: fvm spawn {{ item }} pub global activate melos
+  loop:
+    - stable
+    - beta
