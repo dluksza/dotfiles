@@ -15,14 +15,14 @@ if ! (xcode-select -p >/dev/null 2>&1); then
     echo ' DONE'
 fi
 
-if ! [ $(command -v brew >/dev/null 2>&1) ]; then
+if ! $(command -v brew >/dev/null 2>&1); then
     printf 'Installing HomeBrew ...'
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     eval "$(/opt/homebrew/bin/brew shellenv)"
     echo ' DONE'
 fi
 
-if ! [ $(command -v ansible >/dev/null 2>&1) ]; then
+if ! $(command -v ansible >/dev/null 2>&1); then
     printf 'Installing Ansible ...'
     /opt/homebrew/bin/brew install ansible
     echo ' DONE'
@@ -34,7 +34,7 @@ if ! [ -e /Applications/1Password.app ]; then
     echo ' DONE'
 fi
 
-if ! [ $(command -v chezmoi >/dev/null 2>&1) ]; then
+if ! $(command -v chezmoi >/dev/null 2>&1); then
     printf 'Installing chezmoi ...'
     /opt/homebrew/bin/brew install chezmoi
     echo ' DONE'
