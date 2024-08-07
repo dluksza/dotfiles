@@ -1,0 +1,9 @@
+[".zprezto"]
+  type = "git-repo"
+  url = ""
+  refreshPeriod = "24h"
+  [".zprezto".pull]
+    args = ["--recurse-submodules", "--rebase", "--autostash"]
+  [".zprezto".clone]
+    args = ["--recursive"]
+
