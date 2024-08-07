@@ -1,6 +1,6 @@
 [".zprezto"]
   type = "git-repo"
-  url = ""
+  url = "https://github.com/dluksza/prezto.git"
   refreshPeriod = "24h"
   [".zprezto".pull]
     args = ["--recurse-submodules", "--rebase", "--autostash"]
