@@ -1,0 +1,22 @@
+{
+    "workbench.colorTheme": "dark+(elixir)",
+    "editor.minimap.autohide": true,
+    "git.openRepositoryInParentFolders": "never",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 14,
+    "editor.experimentalInlineEdit.fontFamily": "Inconsolata",
+    "editor.fontFamily": "Fira Code, Menlo, Monaco, 'Courier New', monospace",
+    "elixirLS.enableTestLenses": true,
+    "elixirLS.mixEnv": "test --trace",
+    "files.autoSave": "onFocusChange",
+    "editor.formatOnPaste": true,
+    "dart.flutterHotReloadOnSave": "all",
+    "cSpell.userWords": [
+        "mocktail",
+        "onebasket",
+        "widgetbook"
+    ],
+    "dart.debugExternalPackageLibraries": true,
+    "dart.debugSdkLibraries": true,
+    "editor.minimap.enabled": false
+}
