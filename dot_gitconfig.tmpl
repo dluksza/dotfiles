@@ -1,0 +1,72 @@
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = always
+	ui = always
+[user]
+	name = Dariusz Luksza
+	email = dariusz.luksza@gmail.com
+[core]
+	editor = vim
+	paget = less
+	untrackedcache = false
+	fsmonitor = false
+
+[merge]
+	tool = vimdiff
+[branch]
+	autosetuprebase = always
+	sort = -committerdate
+[alias]
+	slog = log --oneline --graph --decorate --all
+	st = status
+	rnext = rebase --continue
+	commit = commit -s
+	affected-files = diff-tree --name-only -r
+	amend = commit --amend -v
+	cached = diff --cached
+	mhreset = reset --hard origin/master
+	mlog = log origin/master
+	mcheck = checkout --recurse-submodules origin/master
+	irebase = rebase -i
+	rpush = push origin HEAD:refs/for/master
+    c = commit
+    atag = "!git tag -m \"$1\" $1"
+[gerrit]
+	createchangeid = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[submodule]
+	recursive = true
+[http]
+	cookiefile = /Users/lock/.gitcookies
+[init]
+	defaultBranch = master
+
+# 1Pass config
+[user]
+   signingkey = {{ onepasswordRead "op://Personal/DefaultSshKey ED25519/public key" }}
+
+[gpg]
+   format = ssh
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[commit]
+  gpgsign = false
+
+[rerere]
+	enabled = true
+[maintenance]
+	repo = /Users/lock/gerrit-workspace/gerrit
+	repo = /Users/lock/workspace/stadion/onebasket-frontend-flutter
+	repo = /Users/lock/workspace/stadion/of-mobile
+[fetch]
+	writeCommitGrapth = true
+[gpg]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
