@@ -17,7 +17,7 @@
 
 - name: FVM Precache Frameworks
   shell:
-    cmd: fvm spawn {{ item }} precache --all-platforms
+    cmd: fvm spawn {{ item }} precache --android --ios --macos --web
   loop:
     - stable
     - beta
