@@ -27,4 +27,4 @@
     name:
       - android-sdk
       - android-ndk
-      - android-platform
+      - android-platform-tools

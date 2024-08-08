@@ -88,3 +88,7 @@
 
 - name: Download iOS Platform
   shell: xcodebuild -downloadPlatform iOS
+
+- name: Download watchOS Platform
+  shell: xcodebuild -downloadPlatform watchOS 
+
