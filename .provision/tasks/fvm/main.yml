@@ -21,3 +21,10 @@
   loop:
     - stable
     - beta
+
+- name: Install Android SDKs
+  community.general.homebrew_cask:
+    name:
+      - android-sdk
+      - android-ndk
+      - android-platform
