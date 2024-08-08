@@ -1,0 +1,18 @@
+ServerAliveInterval 60
+# UseRoaming no
+
+Host localhost 127.0.0.* *.dev
+  User root
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+
+Host blog 46.101.217.164
+  Port {{ onepasswordRead "op://Personal/gx6frk74ym7xalzl27mralivtq/port" }}
+  User {{ onepasswordRead "op://Personal/gx6frk74ym7xalzl27mralivtq/username" }}
+
+Host bitbucket.org
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/of-bluecode
+
+Host *
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
