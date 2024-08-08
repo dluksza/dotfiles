@@ -12,7 +12,7 @@
 
     - name: Change shell to zsh
       ansible.builtin.user:
-        name: "{{ remote_regular_user }}"
+        name: "{{ ansible_user_id }}"
         shell: /opt/homebrew/bin/zsh
 
     - name: Install stats
