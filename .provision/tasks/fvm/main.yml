@@ -15,6 +15,13 @@
   shell:
     cmd: fvm global beta
 
+- name: FVM Precache Frameworks
+  shell:
+    cmd: fvm spawn {{ item }} precache --all-platforms
+  loop:
+    - stable
+    - beta
+
 - name: FVM Install Melos
   shell:
     cmd: fvm spawn {{ item }} pub global activate melos
