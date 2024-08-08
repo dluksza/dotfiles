@@ -14,6 +14,7 @@
       ansible.builtin.user:
         name: "{{ ansible_user_id }}"
         shell: /opt/homebrew/bin/zsh
+      become: true
 
     - name: Install stats
       include_tasks: tasks/stats/main.yml
