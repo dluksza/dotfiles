@@ -16,6 +16,9 @@
         shell: /opt/homebrew/bin/zsh
       become: true
 
+    - name: Install Xcode
+      include_tasks: tasks/xcode/main.yml
+
     - name: Install stats
       include_tasks: tasks/stats/main.yml
 

@@ -1,0 +1,14 @@
+---
+- name: Install Xcode
+  community.general.mas:
+    id:
+      - 497799835 # Xcode
+
+- name: Install Xcode system requirements
+  shell: xcodebuild -runFirstLaunch
+
+- name: Download iOS Platform
+  shell: xcodebuild -downloadPlatform iOS
+
+- name: Download watchOS Platform
+  shell: xcodebuild -downloadPlatform watchOS

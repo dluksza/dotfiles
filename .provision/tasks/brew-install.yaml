@@ -68,7 +68,6 @@
 - name: Install packages from AppStore
   community.general.mas:
     id:
-      - 497799835 # Xcode
       - 1291898086 # ToggleTrack
       - 310633997 # WhatsApp
 
@@ -82,13 +81,3 @@
       - 409201541 # Pages
       - 682658836 # GarageBand
   become: true
-
-- name: Install Xcode system requirements
-  shell: xcodebuild -runFirstLaunch
-
-- name: Download iOS Platform
-  shell: xcodebuild -downloadPlatform iOS
-
-- name: Download watchOS Platform
-  shell: xcodebuild -downloadPlatform watchOS 
-
