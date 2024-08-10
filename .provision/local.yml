@@ -16,9 +16,6 @@
         shell: /opt/homebrew/bin/zsh
       become: true
 
-    - name: Install Xcode
-      include_tasks: tasks/xcode/main.yml
-
     - name: Install stats
       include_tasks: tasks/stats/main.yml
 
@@ -28,14 +25,17 @@
     - name: Install SDKMan
       include_tasks: tasks/sdkman/main.yml
 
-    - name: Install Emacs
-      include_tasks: tasks/emacs/main.yml
-
     - name: Install Visual Studio Code
       include_tasks: tasks/vscode/main.yml
 
     - name: Install FVM
       include_tasks: tasks/fvm/main.yml
+
+    - name: Install Xcode
+      include_tasks: tasks/xcode/main.yml
+
+    - name: Install Emacs
+      include_tasks: tasks/emacs/main.yml
 
     - name: Install Brave Browser
       include_tasks: tasks/brave-browser/main.yml
