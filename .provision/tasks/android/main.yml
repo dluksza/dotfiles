@@ -1,0 +1,4 @@
+---
+- name: Install Android Studio
+  community.general.homebrew:
+    name: android-studio

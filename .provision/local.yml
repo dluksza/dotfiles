@@ -34,6 +34,9 @@
     - name: Install Xcode
       include_tasks: tasks/xcode/main.yml
 
+    - name: Install Android
+      include_tasks: tasks/android/main.yml
+
     - name: Install Emacs
       include_tasks: tasks/emacs/main.yml
 

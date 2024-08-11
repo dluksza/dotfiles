@@ -20,3 +20,17 @@
   shell:
     cmd: source ~/.sdkman/bin/sdkman-init.sh && sdk install java 21.0.4-tem
   when: has_java21.rc != 0
+
+- shell:
+    cmd: source ~/.sdkman/bin/sdkman-init.sh && sdk list java | grep installed | grep --quiet 8.0.422.fx-zulu
+  failed_when: false
+  register: has_java8
+
+- name: SDKMan Java 8.0.422.fix
+  shell:
+    cmd: source ~/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.422.fx-zulu
+  when: has_java8.rc != 0
+
+- name: SDKMan Java 8.0.422.fix
+  shell:
+    cmd: source ~/.sdkman/bin/sdkman-init.sh && sdk use java 8.0.422.fx-zulu
