@@ -438,3 +438,42 @@
     key: ApplePressAndHoldEnabled
     value: false
     type: bool
+
+- name: Update apps in Dock
+  ansible.builtin.include_role:
+    name: geerlingguy.mac.dock
+  vars:
+    dockitems_remove:
+      - Launchpad
+      - TV
+      - Podcasts
+      - "App Store"
+      - Safari
+      - Messages
+      - Mail
+      - Maps
+      - Photos
+      - FaceTime
+      - Calendar
+      - Contacts
+      - Reminders
+      - Notes
+      - Freeform
+      - Music
+      - News
+      - Keynote
+      - Numbers
+      - Pages
+      - System Settings
+    dockitems_persist:
+      - name: Brave Browser
+        path: "/Applications/Brave Browser.app/"
+      - name: Obsidian
+        path: "/Applications/Obsidian.app/"
+        pos: 2
+      - name: Kitty
+        path: "/Applications/Kitty.app/"
+        pos: 3
+      - name: Spotify
+        path: "/Applications/Spotify.app/"
+        pos: 4

@@ -1,0 +1,6 @@
+---
+roles:
+  - name: geerlingguy.homebrew
+
+collections:
+  - name: geerlingguy.mac
