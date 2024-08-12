@@ -75,8 +75,8 @@
   community.general.osx_defaults:
     domain: "com.apple.Accessibility"
     key: ReduceMotionEnabled
-    value: true
-    type: bool
+    value: 0
+    type: int
 
 - name: Set Languages
   community.general.osx_defaults:
