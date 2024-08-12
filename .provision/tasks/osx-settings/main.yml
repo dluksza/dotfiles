@@ -149,7 +149,7 @@
   community.general.osx_defaults:
     domain: Apple Global Domain
     key: "com.apple.keyboard.fnState"
-    value: false
+    value: true
     type: bool
 
 - name: Disable Swipe Navigation
