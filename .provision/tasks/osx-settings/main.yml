@@ -64,6 +64,13 @@
     value: 2
     type: int
 
+- name: Reduce animations
+  community.general.osx_defaults:
+    domain: "com.apple.Accessibility"
+    key: ReduceMotionEnabled
+    value: true
+    type: bool
+
 - name: Set Languages
   community.general.osx_defaults:
     domain: ".GlobalPreferences_m"
