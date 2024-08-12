@@ -57,6 +57,13 @@
     key: AppleShowScrollBars
     value: WhenScrolling
 
+- name: Disable press-and-hold
+  community.general.osx_defaults:
+    domain: Apple Global Domain
+    key: ApplePressAndHoldEnabled
+    value: false
+    type: bool
+
 - name: Disable Touch ID for AppStore purchase
   community.general.osx_defaults:
     domain: "com.apple.AppleMediaServices"
@@ -417,3 +424,17 @@
       - ShowPathbar
       - ShowStatusBar
       - SidebarTagsSectionDisclosedState
+
+- name: Disable key-repating for VSCode
+  community.general.osx_defaults:
+    domain: "com.microsoft.VSCode"
+    key: ApplePressAndHoldEnabled
+    value: false
+    type: bool
+
+- name: Disable key-repeating for IneteliJ CS
+  community.general.osx_defaults:
+    domain: "com.jetbrains.intellij.ce"
+    key: ApplePressAndHoldEnabled
+    value: false
+    type: bool
