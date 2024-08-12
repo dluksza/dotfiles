@@ -1,4 +1,8 @@
 ---
+- name: Enable Rosetta2 for Flutter
+  shell: softwareupdate --install-rosetta --agree-to-license
+  become: true
+
 - name: Install FVM
   community.general.homebrew:
     name: fvm
