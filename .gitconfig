@@ -1,0 +1,6 @@
+[diff "plist"]
+	textcov = plutil -convert xml1 -o -
+
+[filter "plist"]
+	smudge = plutil -convert binary1 -o -
+	clean = plutil -convert xml1 -o -
