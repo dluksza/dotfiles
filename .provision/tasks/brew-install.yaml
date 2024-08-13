@@ -63,6 +63,7 @@
       # - google-backup-and-sync
       - telegram
       - zoom
+      - garmin-express
 
 - name: Install packages from AppStore
   community.general.mas:
