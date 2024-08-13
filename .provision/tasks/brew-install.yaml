@@ -48,6 +48,7 @@
       - watchman
       - wget
       - zsh-syntax-highlighting
+      - fastlane
 
 - name: Install casks
   community.general.homebrew_cask:
