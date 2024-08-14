@@ -1,6 +1,6 @@
 ---
 - shell:
-    cmd: test -e /Applications/Emacs.app
+    cmd: test -e "/Applications/Emacs.app"
   failed_when: false
   register: has_emacs_app
 
@@ -13,4 +13,4 @@
   shell:
     cmd: osascript -e 'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-plus@29/Emacs.app" at POSIX file "/Applications"'
   when:
-    - has_emacs_app != 0
+    - has_emacs_app.rc != 0
