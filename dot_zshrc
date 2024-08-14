@@ -29,6 +29,8 @@ zinit wait lucid light-mode for \
     zsh-users/zsh-completions
 
 zinit snippet OMZP::1password
+zinit snippet OMZP::macos/music
+zinit snippet OMZP::macos/spotify
 zinit snippet OMZP::macos
 zinit snippet OMZP::brew
 zinit snippet OMZP::colorize
