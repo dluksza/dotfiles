@@ -11,6 +11,16 @@ source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+setopt promptsubst
+
+zinit wait lucid light-mode for \
+  atinit"zicompinit; zicdreplay" \
+      zdharma-continuum/fast-syntax-highlighting \
+  atload"_zsh_autosuggest_start" \
+      zsh-users/zsh-autosuggestions \
+  blockf atpull'zinit creinstall -q .' \
+      zsh-users/zsh-completions
+
 zinit snippet OMZP::1password
 zinit snippet OMZP::macos
 zinit snippet OMZP::brew
@@ -19,11 +29,8 @@ zinit snippet OMZP::cp
 zinit snippet OMZP::history
 zinit snippet OMZP::git
 zinit snippet OMZP::git-extras
-zinit snippet OMZP::httpie
-zinit snippet OMZP::pod
 zinit snippet OMZP::flutter
 zinit snippet OMZP::alias-finder
-zinit snippet OMZP::alias-tips
 
 alias gradle="./gradlew --console plain"
 alias gr=gradle
