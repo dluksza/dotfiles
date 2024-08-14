@@ -28,10 +28,11 @@ zinit wait lucid light-mode for \
     blockf atpull'zinit creinstall -q .' \
     zsh-users/zsh-completions
 
+zinit snippet OMZL::git.zsh
+zinit snippet OMZL::clipboard.zsh
+zinit snippet OMZL::directories.zsh
+
 zinit snippet OMZP::1password
-zinit snippet OMZP::macos/music
-zinit snippet OMZP::macos/spotify
-zinit snippet OMZP::macos
 zinit snippet OMZP::brew
 zinit snippet OMZP::colorize
 zinit snippet OMZP::cp
