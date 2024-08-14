@@ -14,23 +14,36 @@ autoload -Uz _zinit
 setopt promptsubst
 
 zinit wait lucid light-mode for \
-  atinit"zicompinit; zicdreplay" \
-      zdharma-continuum/fast-syntax-highlighting \
-  atload"_zsh_autosuggest_start" \
-      zsh-users/zsh-autosuggestions \
-  blockf atpull'zinit creinstall -q .' \
-      zsh-users/zsh-completions
+    atinit"zicompinit; zicdreplay" \
+    zdharma-continuum/fast-syntax-highlighting \
+    blockf atpull'zinit creinstall -q .' \
+    zsh-users/zsh-completions
 
 zinit snippet OMZP::1password
 zinit snippet OMZP::macos
 zinit snippet OMZP::brew
 zinit snippet OMZP::colorize
 zinit snippet OMZP::cp
-zinit snippet OMZP::history
 zinit snippet OMZP::git
 zinit snippet OMZP::git-extras
 zinit snippet OMZP::flutter
 zinit snippet OMZP::alias-finder
+
+zinit cdreplay -q
+
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+zstyle ':completion:*' list-colors "${(s.|.)}|LS_COLORS"
+zstyle ':completion:*' menu no
 
 alias gradle="./gradlew --console plain"
 alias gr=gradle
@@ -43,6 +56,8 @@ alias v='vi'
 alias mls='melos'
 alias mlsck='melos check'
 alias mlsbs='melos bootstrap'
+
+eval "$(fzf --zsh)"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
