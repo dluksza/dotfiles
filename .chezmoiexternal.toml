@@ -1,9 +1,6 @@
-[".zprezto"]
+[".local/share/zinit/zinit.git"]
   type = "git-repo"
-  url = "https://github.com/dluksza/prezto.git"
+  url = "https://github.com/zdharma-continuum/zinit.git"
   refreshPeriod = "24h"
-  [".zprezto".pull]
-    args = ["--recurse-submodules", "--rebase", "--autostash"]
-  [".zprezto".clone]
-    args = ["--recursive"]
-
+  [".local/share/zinit/zinit.git".pull]
+    args = ["--rebase", "--autostash"]
