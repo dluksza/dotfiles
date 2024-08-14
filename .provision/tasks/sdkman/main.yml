@@ -22,6 +22,11 @@
   when: has_java21.rc != 0
 
 - shell:
-    cmd: source ~/.sdkman/bin/sdkman-init.sh && sdk list java | grep installed | grep --quiet 8.0.422.fx-zulu
+    cmd: source ~/.sdkman/bin/sdkman-init.sh && sdk list java | grep installed | grep --quiet 17.0.12.fx-zulu
   failed_when: false
-  register: has_java8
+  register: has_java17
+
+- name: SDKMan Java 17.0.12-tem
+  shell:
+    cmd: source ~/.sdkman/bin/sdkman-init.sh && sdk install java 17.0.12-tem
+  when: has_java17.rc != 0
