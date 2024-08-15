@@ -68,6 +68,7 @@
       - maccy
       - logi-options-plus
       - slack
+      - altair-graphql-client
 
 - name: Install packages from AppStore
   community.general.mas:
