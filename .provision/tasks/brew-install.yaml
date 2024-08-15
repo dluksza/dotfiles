@@ -67,6 +67,7 @@
       - garmin-express
       - maccy
       - logi-options-plus
+      - slack
 
 - name: Install packages from AppStore
   community.general.mas:
