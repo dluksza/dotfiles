@@ -51,22 +51,22 @@
       type: int
     - name: "NSStatusItem Preferred Position Battery_battery"
       value: 216
-      type: int
+      type: float
     - name: "NSStatusItem Preferred Position CPU"
       value: 408
-      type: int
+      type: float
     - name: "NSStatusItem Preferred Position Disk_mini"
       value: 532
-      type: int
+      type: float
     - name: "NSStatusItem Preferred Position Network_speed"
       value: 579
-      type: int
+      type: float
     - name: "NSStatusItem Preferred Position RAM_mini"
       value: 485
-      type: int
+      type: float
     - name: "NSStatusItem Preferred Position Sensors_sensors"
       value: 650
-      type: int
+      type: float
     - name: RAM_mini_color
       value: pressure
       type: string
