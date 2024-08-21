@@ -22,8 +22,8 @@ export PATH="${HOME}.config/emacs/bin:${PATH}"
 export PATH="${HOME}/.mix/escripts:${PATH}"
 export PATH="${GEM_HOME}/bin:${PATH}"
 
-export LDFLAGS="-L/opt/homebrew/opt/arm-none-eabi-gcc@8/lib"
-export LDFLAGS="-L/opt/homebrew/opt/arm-none-eabi-binutils/lib"
+export LDFLAGS="-L/opt/homebrew/opt/arm-none-eabi-gcc@8/lib ${LDFLAGS}"
+export LDFLAGS="-L/opt/homebrew/opt/arm-none-eabi-binutils/lib ${LDFLAGS}"
 
 # Ensure that a non-login, non-interactive shell has a defined environment.
 if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
