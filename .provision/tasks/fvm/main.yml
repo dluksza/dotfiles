@@ -33,6 +33,10 @@
     - stable
     - beta
 
+- name: FVM Install OnePub
+  shell:
+    cmd: fvm spawn stable pub global activate onepub
+
 - name: Install Android SDKs
   community.general.homebrew_cask:
     name:
