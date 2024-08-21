@@ -4,3 +4,10 @@
   refreshPeriod = "24h"
   [".local/share/zinit/zinit.git".pull]
     args = ["--rebase", "--autostash"]
+
+[".config/emacs"]
+  type = "git-repo"
+  url = "https://github.com/doomemacs/doomemacs"
+  [".config/emacs".clone]
+    args = ["--depth", "1"]
+

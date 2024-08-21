@@ -4,6 +4,10 @@
   failed_when: false
   register: has_emacs_app
 
+- name: Install GCC (it is needed for native compilation in Doom Emacs)
+  community.general.homebrew:
+    name: gcc
+
 - name: Install Emacs 29
   community.general.homebrew:
     name: emacs-plus@29
@@ -14,3 +18,6 @@
     cmd: osascript -e 'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-plus@29/Emacs.app" at POSIX file "/Applications"'
   when:
     - has_emacs_app.rc != 0
+
+- name: Start Emacs Daemon
+  shell: brew services start d12frosted/emacs-plus/emacs-plus@29
