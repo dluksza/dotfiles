@@ -11,3 +11,6 @@
   [".config/emacs".clone]
     args = ["--depth", "1"]
 
+["ThePathOfMastery"]
+  type = "git-repo"
+  url = "{{ onepasswordRead "op://Personal/ThePathOfMastery Vault/password" }}"
