@@ -61,13 +61,13 @@
       - obsidian
       - youtube-downloader
       - google-chrome
-      # - google-backup-and-sync
       - telegram
       - zoom
       - garmin-express
       - maccy
       - logi-options-plus
       - slack
+      - google-drive
 
 - name: Install packages from AppStore
   community.general.mas:
