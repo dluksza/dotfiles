@@ -68,6 +68,7 @@
       - logi-options-plus
       - slack
       - google-drive
+      - bartender
 
 - name: Install packages from AppStore
   community.general.mas:
