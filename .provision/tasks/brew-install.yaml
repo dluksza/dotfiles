@@ -49,6 +49,7 @@
       - wget
       - zsh-syntax-highlighting
       - fastlane
+      - ripgrep
 
 - name: Install casks
   community.general.homebrew_cask:
