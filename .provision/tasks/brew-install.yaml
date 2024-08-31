@@ -50,6 +50,8 @@
       - zsh-syntax-highlighting
       - fastlane
       - ripgrep
+      - age
+      - gpg
 
 - name: Install casks
   community.general.homebrew_cask:
