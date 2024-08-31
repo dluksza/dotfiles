@@ -10,3 +10,6 @@
   loop:
     - firebase-tools
     - npm-check-updates
+
+- name: Install Bun
+  shell: curl -fsSL https://bun.sh/install | bash
