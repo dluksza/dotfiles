@@ -31,6 +31,7 @@ zinit wait lucid light-mode for \
 zinit snippet OMZL::git.zsh
 zinit snippet OMZL::clipboard.zsh
 zinit snippet OMZL::directories.zsh
+zinit snippet OMZL::key-bindings.zsh
 
 zinit snippet OMZP::1password
 zinit snippet OMZP::brew
@@ -53,14 +54,6 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
-
-# History search with arrow UP/DOWN
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search # Up
-bindkey "^[[B" down-line-or-beginning-search # Down
 
 zstyle ':completion:*' list-colors "${(s.|.)}|LS_COLORS"
 zstyle ':completion:*' menu no
