@@ -18,6 +18,7 @@ export BUN_INSTALL="$HOME/.bun"
 
 export PATH="/opt/homebrew/opt/arm-none-eabi-gcc@8/bin:$PATH"
 export PATH="/opt/homebrew/opt/arm-none-eabi-binutils/bin:$PATH"
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="${PATH}":"${HOME}/.pub-cache/bin"
 export PATH="${PATH}:${HOME}/fvm/default/bin"
 export PATH="${HOME}/.config/emacs/bin:${PATH}"
