@@ -40,6 +40,8 @@ zinit wait lucid light-mode for \
     OMZP::flutter \
     OMZP::alias-finder
 
+zinit pack for ls_colors
+
 zinit cdreplay -q
 
 HISTSIZE=5000
