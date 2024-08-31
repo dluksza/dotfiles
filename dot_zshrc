@@ -63,6 +63,7 @@ setopt hist_find_no_dups
 
 zstyle ':completion:*' menu no
 
+alias ls="gls --color=always"
 alias gradle="./gradlew --console plain"
 alias gr=gradle
 #alias f="flutter"
