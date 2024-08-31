@@ -21,27 +21,23 @@ autoload -Uz _zinit
 # Add in Powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-
 zinit wait lucid light-mode for \
     atinit"zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting \
     blockf atpull'zinit creinstall -q .' \
-    zsh-users/zsh-completions
-
-zinit snippet OMZL::git.zsh
-zinit snippet OMZL::clipboard.zsh
-zinit snippet OMZL::directories.zsh
-zinit snippet OMZL::key-bindings.zsh
-zinit snippet OMZL::grep.zsh
-
-zinit snippet OMZP::1password
-zinit snippet OMZP::brew
-zinit snippet OMZP::colorize
-zinit snippet OMZP::cp
-zinit snippet OMZP::git
-zinit snippet OMZP::git-extras
-zinit snippet OMZP::flutter
-zinit snippet OMZP::alias-finder
+    zsh-users/zsh-completions \
+    OMZL::git.zsh \
+    OMZL::clipboard.zsh \
+    OMZL::directories.zsh \
+    OMZL::key-bindings.zsh \
+    OMZP::1password \
+    OMZP::brew \
+    OMZP::colorize \
+    OMZP::cp \
+    OMZP::git \
+    OMZP::git-extras \
+    OMZP::flutter \
+    OMZP::alias-finder
 
 zinit cdreplay -q
 
