@@ -40,7 +40,13 @@ zinit wait lucid light-mode for \
     OMZP::flutter \
     OMZP::alias-finder
 
-zinit pack for ls_colors
+zinit lucid reset \
+  atclone"[[ -z ${commands[dircolors]} ]] && local P=g
+    \${P}gsed -i '/DIR/c\DIR 38;5;63;1' LS_COLORS; \
+    \${P}dircolors -b LS_COLORS > clrs.zsh" \
+  atpull'%atclone' pick"clrs.zsh" nocompile'!' \
+  atload'zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}";' for \
+    trapd00r/LS_COLORS
 
 zinit cdreplay -q
 
@@ -55,7 +61,6 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 
 alias gradle="./gradlew --console plain"
