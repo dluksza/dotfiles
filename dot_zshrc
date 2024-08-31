@@ -25,6 +25,7 @@ zinit wait lucid light-mode for \
     atinit"zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting \
     blockf atpull'zinit creinstall -q .' \
+    romkatv/powerlevel10k \
     zsh-users/zsh-completions \
     OMZL::git.zsh \
     OMZL::clipboard.zsh \
