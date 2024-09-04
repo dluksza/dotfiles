@@ -58,6 +58,7 @@
     name:
       - spotify
       - font-fira-code
+      - font-fira-code-nerd-font
       - kitty
       - font-sf-pro
       - hammerspoon
