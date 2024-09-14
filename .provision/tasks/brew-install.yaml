@@ -52,6 +52,7 @@
       - ripgrep
       - age
       - gpg
+      - luarocks
 
 - name: Install casks
   community.general.homebrew_cask:
