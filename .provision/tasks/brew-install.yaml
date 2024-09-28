@@ -53,6 +53,9 @@
       - age
       - gpg
       - luarocks
+      - imagemagick
+      - graphicsmagick
+      - logi-options+
 
 - name: Install casks
   community.general.homebrew_cask:
@@ -70,7 +73,6 @@
       - zoom
       - garmin-express
       - maccy
-      - logi-options+
       - slack
       - google-drive
       - bartender
