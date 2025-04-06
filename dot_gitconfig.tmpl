@@ -15,9 +15,23 @@
 
 [merge]
 	tool = vimdiff
+[tag]
+  sort = version:refname
 [branch]
 	autosetuprebase = always
 	sort = -committerdate
+[diff]
+  algorithm = histogram
+  colorMoved = plain
+  mnemonicPrefix = true
+  renames = true
+[push]
+  default = simple
+  autoSetupRemote = true
+  followTags = true
+[pull]
+  rebase = true
+  autostash = true
 [alias]
 	slog = log --oneline --graph --decorate --all
 	st = status
@@ -35,6 +49,8 @@
     atag = "!git tag -m \"$1\" $1"
 [gerrit]
 	createchangeid = true
+[help]
+  autocorrect = prompt
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -42,6 +58,10 @@
 	required = true
 [submodule]
 	recursive = true
+[rebase]
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
 [http]
 	cookiefile = /Users/lock/.gitcookies
 [init]
@@ -68,5 +88,7 @@
 	repo = /Users/lock/workspace/stadion/of-mobile
 [fetch]
 	writeCommitGrapth = true
+  prune = true
+  all = true
 [gpg]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
