@@ -1,0 +1,10 @@
+mg979/vim-visual-multi
+fzf
+
+save cmd+s 
+nmToStr/comment.lua
+undotree
+oil.vim 
+spell check
+magit for nvim?
+

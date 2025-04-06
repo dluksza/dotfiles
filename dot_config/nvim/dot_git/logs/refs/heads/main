@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 cb6349c8ae922d1c5745574f4d17b44f2731d451 Dariusz Luksza <dariusz.luksza@gmail.com> 1726331993 +0100	clone: from https://github.com/LazyVim/starter
+cb6349c8ae922d1c5745574f4d17b44f2731d451 803bc181d7c0d6d5eeba9274d9be49b287294d99 Dariusz Luksza <dariusz.luksza@gmail.com> 1734879431 +0000	pull --autostash: Fast-forward
+803bc181d7c0d6d5eeba9274d9be49b287294d99 88e93c90ed7ee6cc748559865372c800206360be Dariusz Luksza <dariusz.luksza@gmail.com> 1734879517 +0000	commit: Customize vim options
