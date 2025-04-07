@@ -19,5 +19,14 @@
     ],
     "dart.debugExternalPackageLibraries": true,
     "dart.debugSdkLibraries": true,
-    "editor.minimap.enabled": false
+    "editor.minimap.enabled": false,
+    "editor.accessibilitySupport": "off",
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "debug.javascript.autoAttachFilter": "always",
+    "svg.preview.mode": "svg"
 }
