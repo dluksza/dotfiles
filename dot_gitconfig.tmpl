@@ -6,7 +6,7 @@
 	ui = always
 [user]
 	name = Dariusz Luksza
-	email = dariusz.luksza@gmail.com
+	email = {{ .email | quote }}
 [core]
 	editor = nvim
 	paget = less
@@ -63,7 +63,7 @@
   autoStash = true
   updateRefs = true
 [http]
-	cookiefile = /Users/lock/.gitcookies
+	cookiefile = {{ .chezmoi.homeDir }}/.gitcookies
 [init]
 	defaultBranch = master
 
