@@ -1,6 +1,0 @@
-0000000000000000000000000000000000000000 9195b66161b196238cbd52a8a4abd027bdaf5f73 Dariusz Luksza <lock@ziutaPro.local> 1723067453 +0100	clone: from https://github.com/dluksza/prezto.git
-9195b66161b196238cbd52a8a4abd027bdaf5f73 a927abe4fd73239d8de67a79463ea506a934bab9 Dariusz Luksza <lock@ziutaPro.local> 1723075591 +0100	pull: Fast-forward
-a927abe4fd73239d8de67a79463ea506a934bab9 83b8d24ca5045b472597258872ec698bdc2455c6 Dariusz Luksza <dariusz.luksza@gmail.com> 1723079457 +0100	commit: Add
-83b8d24ca5045b472597258872ec698bdc2455c6 8d4649fc44a2b4a1ec2476800fcff8067d0a4aaf Dariusz Luksza <dariusz.luksza@gmail.com> 1723079493 +0100	commit (amend): Add android NDK home
-8d4649fc44a2b4a1ec2476800fcff8067d0a4aaf 677a5cd9cc08a362ff58c79b2f9b92980ed69621 Dariusz Luksza <dariusz.luksza@gmail.com> 1723294284 +0100	pull: Fast-forward
-677a5cd9cc08a362ff58c79b2f9b92980ed69621 81718a6aec0c2db4693d95d3884bdfe3cbe44f51 Dariusz Luksza <dariusz.luksza@gmail.com> 1723409320 +0100	pull --recurse-submodules --rebase --autostash: Fast-forward
