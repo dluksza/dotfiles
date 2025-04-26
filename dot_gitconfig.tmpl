@@ -12,11 +12,10 @@
 	paget = less
 	untrackedcache = false
 	fsmonitor = false
-
-[merge]
-	tool = vimdiff
 [tag]
   sort = version:refname
+[merge]
+	tool = vimdiff
 [branch]
 	autosetuprebase = always
 	sort = -committerdate
@@ -45,8 +44,8 @@
 	mcheck = checkout --recurse-submodules origin/master
 	irebase = rebase -i
 	rpush = push origin HEAD:refs/for/master
-    c = commit
-    atag = "!git tag -m \"$1\" $1"
+  c = commit
+  atag = "!git tag -m \"$1\" $1"
 [gerrit]
 	createchangeid = true
 [help]
@@ -82,6 +81,7 @@
 
 [rerere]
 	enabled = true
+  autoupdate = true
 [maintenance]
 	repo = /Users/lock/gerrit-workspace/gerrit
 	repo = /Users/lock/workspace/stadion/onebasket-frontend-flutter
