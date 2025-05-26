@@ -6,3 +6,6 @@ vim.opt.spelllang = "en"
 vim.opt.spell = true
 
 vim.opt.scrolloff = 20
+vim.opt.clipboard = ""
+
+vim.g.lazyvim_rust_diagnostics = "rust-ahalyzer"
