@@ -23,4 +23,8 @@ if status is-interactive
     starship init fish | source
 end
 
+set fish_greeting
+
+fish_add_path "~/fvm/default/bin"
+
 direnv hook fish | source
