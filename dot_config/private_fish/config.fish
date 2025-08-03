@@ -13,6 +13,8 @@ if status is-interactive
     alias mlsck='melos check'
     alias mlsbs='melos bootstrap'
 
+    alias gpf!='git push --force'
+
     # direnv
     set -g direnv_fish_mode eval_on_arrow
     set -g direnv_fish_mode eval_after_arrow
