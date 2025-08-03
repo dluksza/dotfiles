@@ -28,5 +28,10 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "debug.javascript.autoAttachFilter": "always",
-    "svg.preview.mode": "svg"
+    "svg.preview.mode": "svg",
+    "rust-analyzer.inlayHints.reborrowHints.enable": "always",
+    "rust-analyzer.inlayHints.bindingModeHints.enable": true,
+    "rust-analyzer.inlayHints.closingBraceHints.minLines": 1,
+    "editor.formatOnSaveMode": "modifications",
+    "editor.formatOnSave": true
 }
