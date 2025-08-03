@@ -25,6 +25,11 @@ end
 
 set fish_greeting
 
+set -g GPG_TTY $(tty)
+set -g GEM_HOME "~/.gem"
+set -g BUN_INSTALL "~/.bun"
+
 fish_add_path "~/fvm/default/bin"
+fish_add_path "~/.mix/escripts"
 
 direnv hook fish | source
