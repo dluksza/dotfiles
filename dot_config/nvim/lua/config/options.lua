@@ -8,4 +8,4 @@ vim.opt.spell = true
 vim.opt.scrolloff = 20
 vim.opt.clipboard = ""
 
-vim.g.lazyvim_rust_diagnostics = "rust-ahalyzer"
+-- vim.g.lazyvim_rust_diagnostics = "rust-analyzer"
