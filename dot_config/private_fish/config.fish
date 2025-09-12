@@ -3,10 +3,13 @@ if status is-interactive
     # alias ls="ls --color=always"
     # alias gradle="./gradlew --console plain"
     # alias gr=gradle
-    # alias f="flutter"
-    # alias d="dart"
-    # alias ft="f test"
+    alias f="fvm flutter"
+    alias d="fvm dart"
+    alias fr="fvm flutter run"
+    alias ft="fvm flutter test"
+    alias fat="fvm flutter attach"
     # alias dt="d test"
+    alias c='bun run --bun claude'
     alias vi='nvim'
     alias v='vi'
     alias mls='melos'
@@ -22,16 +25,24 @@ if status is-interactive
 
     set -gx CLICOLOR true
 
+    fish_add_path -a "/Applications/Nix Apps/WhatsApp.app/Contents/MacOS/"
+
     starship init fish | source
 end
 
 set fish_greeting
-
 set -g GPG_TTY $(tty)
+
 set -g GEM_HOME "~/.gem"
 set -g BUN_INSTALL "~/.bun"
 
 fish_add_path "~/fvm/default/bin"
 fish_add_path "~/.mix/escripts"
+fish_add_path "~/.pub-cache/bin"
+fish_add_path "/Users/lock/.bun/bin"
+
+set -gx PATH ~/fvm/default/bin $PATH
+set -gx PATH ~/.mix/escripts $PATH
+set -gx PATH ~/.pub-cache/bin $PATH
 
 direnv hook fish | source
