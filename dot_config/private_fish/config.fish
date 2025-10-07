@@ -27,8 +27,13 @@ if status is-interactive
 
     fish_add_path -a "/Applications/Nix Apps/WhatsApp.app/Contents/MacOS/"
 
+    # disable abbreviation auto-expanstion
+    bind ' ' self-insert
+
     starship init fish | source
 end
+
+alias jq="jaq"
 
 set fish_greeting
 set -g GPG_TTY $(tty)
@@ -39,7 +44,7 @@ set -g BUN_INSTALL "~/.bun"
 fish_add_path "~/fvm/default/bin"
 fish_add_path "~/.mix/escripts"
 fish_add_path "~/.pub-cache/bin"
-fish_add_path "/Users/lock/.bun/bin"
+fish_add_path "~/.bun/bin"
 
 set -gx PATH ~/fvm/default/bin $PATH
 set -gx PATH ~/.mix/escripts $PATH
