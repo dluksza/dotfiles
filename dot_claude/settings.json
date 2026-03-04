@@ -1,0 +1,73 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(uv:*)",
+      "Bash(find:*)",
+      "Bash(mv:*)",
+      "Bash(grep:*)",
+      "Bash(npm:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Write",
+      "Bash(chmod:*)",
+      "Bash(touch:*)",
+      "Bash(flutter:*)",
+      "Bash(mix:*)",
+      "Bash(devenv:*)",
+      "Bash(bun:*)",
+      "WebFetch",
+      "WebSearch",
+      "Bash(~/.claude-code-docs/claude-docs-helper.sh:*)"
+    ],
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Read(./build)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./config/credentials.*)",
+      "Read(./secrets/**)",
+      "Read(./**/secrets/**)",
+      "Read(./.npmrc)",
+      "Read(~/.npmrc)",
+      "Read(~/.ssh/**)",
+      "Read(./.ssh/**)",
+      "Read(./private/**)",
+      "Write(./.env*)",
+      "Write(./.ssh/**)",
+      "Write(~/.ssh/**)",
+      "Write(./config/credentials.*)",
+      "Write(./secrets/**)",
+      "NotebookEdit"
+    ]
+  },
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude-code-docs/claude-docs-helper.sh hook-check"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bunx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "llm-application-dev@claude-code-workflows": true,
+    "agent-orchestration@claude-code-workflows": true
+  },
+  "skipDangerousModePermissionPrompt": true
+}
