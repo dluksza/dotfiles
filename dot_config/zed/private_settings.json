@@ -1,0 +1,85 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "tabs": {
+    "file_icons": true,
+    "git_status": false
+  },
+  "title_bar": {
+    "show_branch_icon": true
+  },
+  "helix_mode": false,
+  "agent": {
+    "favorite_models": [],
+    "model_parameters": [],
+    "enable_feedback": false
+  },
+  "search": {
+    "regex": true
+  },
+  "use_smartcase_search": true,
+  "languages": {
+    "TypeScript": {
+      "tab_size": 2
+    }
+  },
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  },
+  "prettier": {
+    "allowed": false
+  },
+  "inlay_hints": {
+    "enabled": true
+  },
+  "vim": {
+    "use_smartcase_find": true,
+    "use_system_clipboard": "never"
+  },
+  "which_key": {
+    "enabled": true
+  },
+  "redact_private_values": false,
+  "agent_servers": {
+    "claude": {
+      "favorite_models": [
+        "opus"
+      ],
+      "default_model": "opus"
+    }
+  },
+  "telemetry": {
+    "diagnostics": true,
+    "metrics": false
+  },
+  "vim_mode": true,
+  "base_keymap": "VSCode",
+  "minimap": {
+    "show": "never"
+  },
+  "autosave": "on_focus_change",
+  "buffer_font_fallbacks": [
+    "Menlo",
+    "Monaco",
+    "Courier New",
+    "monospace"
+  ],
+  "buffer_font_family": "Fira Code",
+  "auto_indent_on_paste": true,
+  "icon_theme": "Catppuccin Macchiato",
+  "ui_font_size": 16,
+  "buffer_font_size": 14.0,
+  "theme": {
+    "mode": "dark",
+    "light": "Ayu Light",
+    "dark": "Ayu Dark",
+  },
+}
