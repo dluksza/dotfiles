@@ -32,6 +32,8 @@ config.keys = {
 	{ key = "w", mods = "CMD", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
 	{ key = "[", mods = "CMD|SHIFT", action = wezterm.action.ActivateTabRelative(-1) },
 	{ key = "]", mods = "CMD|SHIFT", action = wezterm.action.ActivateTabRelative(1) },
+	{ key = "[", mods = "CMD|OPT", action = wezterm.action.MoveTabRelative(-1) },
+	{ key = "]", mods = "CMD|OPT", action = wezterm.action.MoveTabRelative(1) },
 	{ key = "1", mods = "CMD", action = wezterm.action.ActivateTab(0) },
 	{ key = "2", mods = "CMD", action = wezterm.action.ActivateTab(1) },
 	{ key = "3", mods = "CMD", action = wezterm.action.ActivateTab(2) },
