@@ -12,6 +12,8 @@
 	paget = less
 	untrackedcache = false
 	fsmonitor = false
+  excludesFile = ~/.gitignore
+  attributesfile = ~/.gitattributes
 [tag]
   sort = version:refname
 [merge]
@@ -69,16 +71,13 @@
 # 1Pass config
 [user]
    signingkey = {{ onepasswordRead "op://Personal/DefaultSshKey ED25519/public key" }}
-
 [gpg]
    format = ssh
-
+	 program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 [gpg "ssh"]
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-
 [commit]
   gpgsign = false
-
 [rerere]
 	enabled = true
   autoupdate = true
@@ -90,5 +89,5 @@
 	writeCommitGrapth = true
   prune = true
   all = true
-[gpg]
-	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[diff "plist"]
+  textconv = plutil -convert xml1 -o -
