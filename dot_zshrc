@@ -20,7 +20,6 @@ zinit wait lucid light-mode for \
     OMZL::clipboard.zsh \
     OMZL::directories.zsh \
     OMZL::key-bindings.zsh \
-    OMZP::1password \
     OMZP::brew \
     OMZP::colorize \
     OMZP::cp \
