@@ -4,7 +4,7 @@ function system-update -d "Update system: nix flake, darwin-rebuild, garbage col
     or return 1
 
     echo "━━━ Rebuilding system ━━━"
-    sudo darwin-rebuild switch --flake ~/.config/nix-darwin/#(scutil --get LocalHostName) --refresh --verbose --show-trace
+    sudo darwin-rebuild switch --flake ~/.config/nix-darwin/#ziutaPro --refresh --verbose --show-trace
     or return 1
 
     echo "━━━ Garbage collecting ━━━"
