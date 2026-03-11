@@ -35,6 +35,7 @@
         uutils-coreutils-noprefix
         ripgrep
         fish
+        age
         git
         git-lfs
         wget
