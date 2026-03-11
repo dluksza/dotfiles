@@ -129,7 +129,7 @@
             "synology-drive"
             "google-drive"
             "logi-options+"
-            "garmin-express"
+#            "garmin-express"
             "font-sf-pro"
             "android-studio"
             "proxyman"
@@ -225,7 +225,7 @@
             Show24Hour = true;
             ShowSeconds = true;
           };
-        universalaccess.reduceTransparency = true;
+#        universalaccess.reduceTransparency = true;
       };
 
       programs.direnv = {
