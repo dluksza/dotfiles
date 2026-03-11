@@ -186,6 +186,7 @@
           wvous-tl-corner = 1; # Disabled
         };
         finder = {
+          DisableAllAnimations = true;
           FXPreferredViewStyle = "clmv";
           AppleShowAllExtensions = true;
           NewWindowTarget = "Home";
@@ -215,8 +216,12 @@
           NSAutomaticPeriodSubstitutionEnabled = false;
           NSAutomaticQuoteSubstitutionEnabled = false;
           NSAutomaticSpellingCorrectionEnabled = false;
+          NSAutomaticWindowAnimationsEnabled = false;
+          NSWindowResizeTime = 0.001;
           "com.apple.keyboard.fnState" = true;
           "com.apple.trackpad.scaling" = 2.5;
+          "com.apple.springing.delay" = 0.0;
+          "com.apple.springing.enabled" = true;
         };
         controlcenter = {
             AirDrop = false;
