@@ -86,13 +86,6 @@
               elixir-lsp.vscode-elixir-ls
             ];
           })
-        # Stadion dev
-        docker
-        docker-client
-        docker-compose
-        azure-cli
-        dotnetCorePackages.sdk_8_0-bin
-        dotnetPackages.Nuget
       ];
 
       fonts.packages = with pkgs; [
