@@ -50,6 +50,37 @@ else
   ok "Installed"
 fi
 
+# --- Hostname ---
+CURRENT_HOSTNAME=$(scutil --get LocalHostName 2>/dev/null || hostname -s)
+echo ""
+info "Current hostname: ${CURRENT_HOSTNAME}"
+read -rp "Enter hostname for this machine [${CURRENT_HOSTNAME}]: " NEW_HOSTNAME
+NEW_HOSTNAME="${NEW_HOSTNAME:-$CURRENT_HOSTNAME}"
+
+# Sanitize: only alphanumeric and hyphens allowed for LocalHostName
+SANITIZED=$(echo "${NEW_HOSTNAME}" | tr -cd 'a-zA-Z0-9-' | sed 's/^-//;s/-$//')
+if [[ "${SANITIZED}" != "${NEW_HOSTNAME}" ]]; then
+  warn "Hostname sanitized: '${NEW_HOSTNAME}' → '${SANITIZED}'"
+  NEW_HOSTNAME="${SANITIZED}"
+fi
+
+if [[ -z "${NEW_HOSTNAME}" ]]; then
+  fail "Hostname cannot be empty"
+fi
+
+if [[ "${NEW_HOSTNAME}" != "${CURRENT_HOSTNAME}" ]]; then
+  info "Setting hostname to '${NEW_HOSTNAME}'..."
+  sudo scutil --set ComputerName "${NEW_HOSTNAME}"
+  sudo scutil --set LocalHostName "${NEW_HOSTNAME}"
+  sudo scutil --set HostName "${NEW_HOSTNAME}.local"
+  sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "${NEW_HOSTNAME}"
+  ok "Hostname set to ${NEW_HOSTNAME}"
+else
+  ok "Keeping hostname: ${NEW_HOSTNAME}"
+fi
+
+FLAKE_HOST="${NEW_HOSTNAME}"
+
 # --- Install Nix ---
 step "Nix"
 
