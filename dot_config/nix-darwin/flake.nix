@@ -225,6 +225,7 @@
             Show24Hour = true;
             ShowSeconds = true;
           };
+        universalaccess.reduceTransparency = true;
       };
 
       programs.direnv = {
