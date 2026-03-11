@@ -102,7 +102,7 @@
       nix-homebrew = {
           enable = true;
           enableRosetta = true;
-          user = "lock";
+          user = "darek";
           autoMigrate = false;
           mutableTaps = true;
           taps = {
@@ -164,7 +164,7 @@
       system.stateVersion = 6;
       security.pam.services.sudo_local.touchIdAuth = true;
 
-      system.primaryUser = "lock";
+      system.primaryUser = "darek";
       system.defaults = {
         dock = {
           largesize = 64;
@@ -244,12 +244,12 @@
           enable = true;
         };
 
-      users.knownUsers = [ "lock" ];
-      users.users.lock = {
+      users.knownUsers = [ "darek" ];
+      users.users.darek = {
           uid = 501;
           shell = pkgs.fish;
         };
-      nix.settings.trusted-users = [ "lock" ];
+      nix.settings.trusted-users = [ "darek" ];
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
