@@ -1,9 +1,3 @@
-[".config/emacs"]
-type = "git-repo"
-url = "https://github.com/doomemacs/doomemacs"
-[".config/emacs".clone]
-args = ["--depth", "1"]
-
 ["ThePathOfMastery"]
 url = "{{ onepasswordRead "op://Personal/ThePathOfMastery Vault/password" }}"
 type = "git-repo"
