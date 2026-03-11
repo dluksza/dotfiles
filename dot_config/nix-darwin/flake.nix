@@ -180,7 +180,6 @@
           wvous-tl-corner = 1; # Disabled
         };
         finder = {
-          DisableAllAnimations = true;
           FXPreferredViewStyle = "clmv";
           AppleShowAllExtensions = true;
           NewWindowTarget = "Home";
