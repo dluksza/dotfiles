@@ -15,7 +15,7 @@ function system-update -d "Update system: nix flake, darwin-rebuild, garbage col
 
     echo "━━━ Syncing dotfiles ━━━"
     chezmoi re-add
-    git -C ~/.local/share/chezmoi add dot_config/nix-darwin/flake.nix
+    git -C ~/.local/share/chezmoi add dot_config/nix-darwin/flake.lock
     git -C ~/.local/share/chezmoi diff --cached --quiet || git -C ~/.local/share/chezmoi commit -m "Update nix flake lock"
     git -C ~/.local/share/chezmoi push
 
