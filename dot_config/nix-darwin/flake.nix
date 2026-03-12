@@ -238,6 +238,13 @@
       system.activationScripts.postActivation.text = ''
         brew pin zed 2>/dev/null || true
         brew pin brave-browser 2>/dev/null || true
+
+        # Add Stats and Ice as login items (idempotent — skips if already present)
+        for app in "Stats" "Ice"; do
+          if ! osascript -e "tell application \"System Events\" to get the name of every login item" 2>/dev/null | grep -q "$app"; then
+            osascript -e "tell application \"System Events\" to make login item at end with properties {path:\"/Applications/$app.app\", hidden:false}" 2>/dev/null || true
+          fi
+        done
       '';
 
       programs.direnv = {
