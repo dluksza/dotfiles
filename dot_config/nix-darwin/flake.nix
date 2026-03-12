@@ -236,8 +236,9 @@
           };
       };
       system.activationScripts.postActivation.text = ''
-        brew pin zed 2>/dev/null || true
-        brew pin brave-browser 2>/dev/null || true
+        for cask in zed brave-browser; do
+          brew pin "$cask" 2>/dev/null || true
+        done
 
         # Add Stats and Ice as login items (idempotent — skips if already present)
         for app in "Stats" "Ice"; do
