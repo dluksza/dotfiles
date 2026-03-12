@@ -202,7 +202,7 @@ fi
 step "chezmoi"
 
 if command -v chezmoi &>/dev/null; then
-  chezmoi apply
+  chezmoi init --apply
   ok "Dotfiles applied"
 else
   fail "chezmoi not found after nix-darwin build. Is it in your nix config?"
