@@ -25,6 +25,7 @@
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, ... }:
   let
     configuration = { pkgs, ... }: {
+      nix.enable = false;
       nixpkgs.config.allowUnfree = true;
 
       # List packages installed in system profile. To search by name, run:
@@ -34,6 +35,7 @@
         uutils-coreutils-noprefix
         ripgrep
         fish
+        age
         git
         git-lfs
         wget
@@ -85,13 +87,6 @@
               elixir-lsp.vscode-elixir-ls
             ];
           })
-        # Stadion dev
-        docker
-        docker-client
-        docker-compose
-        azure-cli
-        dotnetCorePackages.sdk_8_0-bin
-        dotnetPackages.Nuget
       ];
 
       fonts.packages = with pkgs; [
@@ -103,7 +98,7 @@
       nix-homebrew = {
           enable = true;
           enableRosetta = true;
-          user = "lock";
+          user = "darek";
           autoMigrate = false;
           mutableTaps = true;
           taps = {
@@ -136,7 +131,7 @@
             "synology-drive"
             "google-drive"
             "logi-options+"
-            "garmin-express"
+#            "garmin-express"
             "font-sf-pro"
             "android-studio"
             "proxyman"
@@ -167,7 +162,7 @@
       system.stateVersion = 6;
       security.pam.services.sudo_local.touchIdAuth = true;
 
-      system.primaryUser = "lock";
+      system.primaryUser = "darek";
       system.defaults = {
         dock = {
           largesize = 64;
@@ -190,7 +185,6 @@
           wvous-tl-corner = 1; # Disabled
         };
         finder = {
-          DisableAllAnimations = true;
           FXPreferredViewStyle = "clmv";
           AppleShowAllExtensions = true;
           NewWindowTarget = "Home";
@@ -268,21 +262,15 @@
           enable = true;
         };
 
-      users.knownUsers = [ "lock" ];
-      users.users.lock = {
+      users.knownUsers = [ "darek" ];
+      users.users.darek = {
           uid = 501;
           shell = pkgs.fish;
         };
-      nix.settings.trusted-users = [ "lock" ];
+      nix.settings.trusted-users = [ "darek" ];
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
-
-      # nix.settings.auto-optimse-store = true;
-      nix.gc = {
-          automatic = true;
-          options = "--delte-older-than 30d";
-        };
     };
   in
   {
