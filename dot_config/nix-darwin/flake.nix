@@ -206,6 +206,7 @@
           AppleMeasurementUnits= "Centimeters";
           AppleICUForce24HourTime = true;
           AppleInterfaceStyle = "Dark";
+          ApplePressAndHoldEnabled = false;
           KeyRepeat = 2;
           InitialKeyRepeat = 15;
           NSAutomaticCapitalizationEnabled = false;
@@ -227,6 +228,10 @@
           };
         spaces.spans-displays = false;
         WindowManager.EnableStandardClickToShowDesktop = false;
+        CustomUserPreferences."com.apple.desktopservices" = {
+            DSDontWriteNetworkStores = true;
+            DSDontWriteUSBStores = true;
+          };
         menuExtraClock = {
             ShowDate = 1; # Always
             Show24Hour = true;
@@ -245,6 +250,11 @@
           fi
         done
       '';
+
+      launchd.daemons.limit-maxfiles = {
+          command = "/bin/launchctl limit maxfiles 524288 524288";
+          serviceConfig.RunAtLoad = true;
+        };
 
       programs.direnv = {
           enable = true;
