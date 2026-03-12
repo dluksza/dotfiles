@@ -172,6 +172,8 @@
         dock = {
           largesize = 64;
           autohide = true;
+          autohide-delay = 0.0;
+          autohide-time-modifier = 0.15;
           mru-spaces = false;
           launchanim = false;
           magnification = true;
@@ -229,6 +231,8 @@
             AirDrop = false;
             BatteryShowPercentage = true;
           };
+        spaces.spans-displays = false;
+        WindowManager.EnableStandardClickToShowDesktop = false;
         menuExtraClock = {
             ShowDate = 1; # Always
             Show24Hour = true;
