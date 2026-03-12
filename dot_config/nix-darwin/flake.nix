@@ -123,6 +123,7 @@
           casks = [
             "lulu"
             "1password"
+            "brave-browser"
             "stats"
             "hammerspoon"
             "jordanbaird-ice"
@@ -225,8 +226,10 @@
             Show24Hour = true;
             ShowSeconds = true;
           };
-#        universalaccess.reduceTransparency = true;
       };
+      system.activationScripts.postActivation.text = ''
+        brew pin brave-browser 2>/dev/null || true
+      '';
 
       programs.direnv = {
           enable = true;
