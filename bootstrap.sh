@@ -141,6 +141,12 @@ else
 fi
 ok "System built and activated (1Password, chezmoi, packages installed)"
 
+# Refresh PATH: non-interactive bash won't source /etc/bashrc automatically,
+# so nix-darwin's PATH (including /run/current-system/sw/bin) isn't available yet.
+if [[ -e /etc/static/bashrc ]]; then
+  source /etc/static/bashrc
+fi
+
 # --- 1Password sign-in (manual) ---
 step "1Password Setup"
 
