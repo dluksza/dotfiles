@@ -136,6 +136,7 @@
             "proxyman"
             "google-chrome"
             "gcloud-cli"
+            "zed"
           ];
           onActivation = {
             cleanup = "zap";
@@ -228,6 +229,7 @@
           };
       };
       system.activationScripts.postActivation.text = ''
+        brew pin zed 2>/dev/null || true
         brew pin brave-browser 2>/dev/null || true
       '';
 
