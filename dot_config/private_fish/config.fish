@@ -42,12 +42,12 @@ set -g GPG_TTY $(tty)
 set -g GEM_HOME "~/.gem"
 set -g BUN_INSTALL "~/.bun"
 
-fish_add_path /Users/lock/fvm/default/bin
-fish_add_path "/Users/lock/.mix/escripts"
-fish_add_path "/Users/lock/.pub-cache/bin"
-fish_add_path "/Users/lock/.bun/bin"
-fish_add_path "/Users/lock/.local/bin"
-fish_add_path "/Users/lock/.cargo/bin"
+fish_add_path ~/fvm/default/bin
+fish_add_path "~/.mix/escripts"
+fish_add_path "~/.pub-cache/bin"
+fish_add_path "~/.bun/bin"
+fish_add_path "~/.local/bin"
+fish_add_path "~/.cargo/bin"
 
 # set -gx PATH ~/fvm/default/bin $PATH
 # set -gx PATH ~/.mix/escripts $PATH
@@ -56,11 +56,11 @@ fish_add_path "/Users/lock/.cargo/bin"
 direnv hook fish | source
 
 # pnpm
-set -gx PNPM_HOME /Users/lock/Library/pnpm
+set -gx PNPM_HOME ~/Library/pnpm
 if not string match -q -- $PNPM_HOME $PATH
     set -gx PATH "$PNPM_HOME" $PATH
 end
 # pnpm end
 
 # Added by Antigravity
-fish_add_path /Users/lock/.antigravity/antigravity/bin
+fish_add_path ~/.antigravity/antigravity/bin

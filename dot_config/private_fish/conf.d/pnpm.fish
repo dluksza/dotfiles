@@ -1,4 +1,4 @@
-set -gx PNPM_HOME /Users/lock/Library/pnpm
+set -gx PNPM_HOME /Users/darek/Library/pnpm
 if not string match -q -- $PNPM_HOME $PATH
     set -gx PATH "$PNPM_HOME" $PATH
 end
