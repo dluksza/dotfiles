@@ -166,6 +166,38 @@ else
   warn "Run 'eval \$(op signin)' if needed, then re-run 'chezmoi apply'."
 fi
 
+# --- Apple Account sign-in + Xcode ---
+step "Apple Account & Xcode"
+
+ICLOUD_ACCOUNT=$(defaults read ~/Library/Preferences/MobileMeAccounts.plist Accounts 2>/dev/null | grep AccountID | head -1 | cut -d '"' -f 2 || true)
+if [[ -n "${ICLOUD_ACCOUNT}" ]]; then
+  ok "Already signed in as ${ICLOUD_ACCOUNT}"
+else
+  info "Opening Apple Account sign-in (use 1Password for credentials)..."
+  open "x-apple.systempreferences:com.apple.preferences.AppleIDPrefPane"
+  echo "┌──────────────────────────────────────────────────────┐"
+  echo "│  Sign in with your Apple Account in System Settings. │"
+  echo "│  Use 1Password to look up your credentials.          │"
+  echo "│  This is required to install Xcode from App Store.   │"
+  echo "└──────────────────────────────────────────────────────┘"
+  read -rp "Press Enter when signed in... " _
+
+  ICLOUD_ACCOUNT=$(defaults read ~/Library/Preferences/MobileMeAccounts.plist Accounts 2>/dev/null | grep AccountID | head -1 | cut -d '"' -f 2 || true)
+  if [[ -n "${ICLOUD_ACCOUNT}" ]]; then
+    ok "Signed in as ${ICLOUD_ACCOUNT}"
+  else
+    warn "Could not verify Apple Account sign-in. Xcode install may fail."
+  fi
+fi
+
+if mas list 2>/dev/null | grep -q "497799835"; then
+  ok "Xcode already installed"
+else
+  info "Installing Xcode from App Store (this may take a while)..."
+  mas install 497799835
+  ok "Xcode installed"
+fi
+
 # --- Apply chezmoi dotfiles ---
 step "chezmoi"
 
