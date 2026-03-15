@@ -139,6 +139,9 @@
             "gcloud-cli"
             "zed"
           ];
+          masApps = {
+            "Toggl Track: Hours & Time Log" = 1291898086;
+          };
           onActivation = {
             cleanup = "zap";
             autoUpdate = true;
