@@ -46,7 +46,6 @@
       "NotebookEdit"
     ]
   },
-  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -67,7 +66,9 @@
   },
   "enabledPlugins": {
     "llm-application-dev@claude-code-workflows": true,
-    "agent-orchestration@claude-code-workflows": true
+    "agent-orchestration@claude-code-workflows": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "model": "opus"
 }
