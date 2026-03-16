@@ -137,6 +137,7 @@
             "google-chrome"
             "gcloud-cli"
             "zed"
+            "nordvpn"
           ];
           masApps = {
             "Toggl Track: Hours & Time Log" = 1291898086;
