@@ -134,7 +134,6 @@
 #            "garmin-express"
             "font-sf-pro"
             "android-studio"
-            "proxyman"
             "google-chrome"
             "gcloud-cli"
             "zed"
