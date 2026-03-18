@@ -120,6 +120,7 @@
             "fastlane"
             "cocoapods"
             "pre-commit"
+            "openjdk@17"
           ];
           casks = [
             "lulu"
