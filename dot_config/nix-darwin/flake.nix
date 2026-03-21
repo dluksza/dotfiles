@@ -58,9 +58,7 @@
         hunspell
         watchman
         mas
-        _1password-cli
         spotify
-        ncspot
         # yt-dlp
         maccy
         starship
@@ -176,6 +174,8 @@
           mru-spaces = false;
           launchanim = false;
           magnification = true;
+          expose-animation-duration = 0.1;
+          minimize-to-application = true;
           orientation = "right";
           show-recents = false;
           tilesize = 28;
@@ -232,9 +232,22 @@
           };
         spaces.spans-displays = false;
         WindowManager.EnableStandardClickToShowDesktop = false;
+        CustomUserPreferences."com.apple.TimeMachine" = {
+            AutoBackup = false;
+          };
+        universalaccess = {
+            reduceMotion = true;
+            reduceTransparency = true;
+          };
         CustomUserPreferences."com.apple.desktopservices" = {
             DSDontWriteNetworkStores = true;
             DSDontWriteUSBStores = true;
+          };
+        CustomUserPreferences."com.apple.assistant.support" = {
+            AssistantEnabled = false;
+          };
+        CustomUserPreferences."com.apple.Siri" = {
+            StatusMenuVisible = false;
           };
         menuExtraClock = {
             ShowDate = 1; # Always
