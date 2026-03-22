@@ -254,6 +254,11 @@
             Show24Hour = true;
             ShowSeconds = true;
           };
+        screensaver = {
+            askForPassword = true;
+            askForPasswordDelay = 0;
+          };
+
       };
       system.activationScripts.postActivation.text = ''
         for cask in zed brave-browser; do
@@ -267,6 +272,27 @@
           fi
         done
       '';
+
+      networking.applicationFirewall = {
+          enable = true;
+          enableStealthMode = true;
+          allowSigned = true;
+          allowSignedApp = false;
+        };
+
+      environment.etc."ssh/sshd_config.d/200-hardening.conf" = {
+          text = ''
+            PermitRootLogin no
+            PasswordAuthentication no
+            KbdInteractiveAuthentication no
+            MaxAuthTries 3
+            MaxSessions 3
+            AllowUsers darek
+            ClientAliveInterval 300
+            ClientAliveCountMax 2
+            X11Forwarding no
+          '';
+        };
 
       launchd.daemons.limit-maxfiles = {
           command = "/bin/launchctl limit maxfiles 524288 524288";
