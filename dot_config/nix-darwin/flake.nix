@@ -121,7 +121,6 @@
             "openjdk@17"
           ];
           casks = [
-            "lulu"
             "1password"
             "brave-browser"
             "stats"
