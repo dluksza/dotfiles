@@ -119,6 +119,7 @@
             "cocoapods"
             "pre-commit"
             "openjdk@17"
+            "ollama"
           ];
           casks = [
             "1password"
