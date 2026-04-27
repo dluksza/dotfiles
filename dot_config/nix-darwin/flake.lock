@@ -121,6 +121,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-direnv-pin": {
+      "locked": {
+        "lastModified": 1752226285,
+        "narHash": "sha256-PxIABgCZICawAr4bPV7nTWuHeBXwX+KCpTK7lkEaTfg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "117b163b7844dca825a3b54fb473336126c55c9b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "117b163b7844dca825a3b54fb473336126c55c9b",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "brew-src": "brew-src",
@@ -129,7 +145,8 @@
         "homebrew-fvm": "homebrew-fvm",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-direnv-pin": "nixpkgs-direnv-pin"
       }
     }
   },
