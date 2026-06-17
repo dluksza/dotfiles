@@ -42,13 +42,6 @@
             inherit (prev.stdenv.hostPlatform) system;
             config.allowUnfree = true;
           }).direnv;
-          # folly 2026.01.19.00 fails to compile against libc++ 21: the removed
-          # _LIBCPP_HAS_ASAN macros make UninitializedMemoryHacks.h emit
-          # __sanitizer_annotate_contiguous_container with ASan off (undeclared
-          # identifier), breaking folly's consumers (fbthrift/wangle/watchman).
-          folly = prev.folly.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [ ./folly-libcxx21-asan.patch ];
-          });
         })
       ];
 
