@@ -53,13 +53,21 @@
   },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "agent-skills@addy-agent-skills": true,
+    "figma@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "callstack-agent-skills": {
       "source": {
         "source": "github",
         "repo": "callstackincubator/agent-skills"
+      }
+    },
+    "addy-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "addyosmani/agent-skills"
       }
     }
   },
