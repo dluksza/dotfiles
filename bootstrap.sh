@@ -40,6 +40,82 @@ step() { echo -e "\n${GREEN}━━━ $1 ━━━${NC}\n"; }
 # Keep the Mac awake
 caffeinate -s -w $$ &
 
+# --- Preflight: can this Mac actually run Determinate Nix + nix-darwin? ---
+# Only the admin/sudo gate is deterministic; APFS and MDM are heuristics.
+# On a managed/locked-down company laptop these are the usual blockers.
+nix_fallback() {
+  echo -e "\n${RED}✗ Determinate Nix + nix-darwin is not viable on this Mac.${NC}"
+  echo -e "${YELLOW}Reason:${NC} $1\n"
+  cat <<FALLBACK
+Use the Homebrew + manual fallback. chezmoi dotfiles still work; only the
+nix-darwin system layer (macOS defaults, firewall, sshd hardening) is skipped.
+
+  1. Install Homebrew:
+     /bin/bash -c "\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  2. Install chezmoi + 1Password (for the age key), then apply this profile:
+     brew install chezmoi
+     brew install --cask 1password 1password-cli
+     CHEZMOI_PROFILE=${PROFILE:-work} chezmoi init --apply dluksza
+
+  3. Install the dev stack by hand — the lists live in the flake:
+       dot_config/nix-darwin/modules/{common,flutter}.nix
+     e.g. brew install fvm fastlane cocoapods openjdk@17 pre-commit
+          brew install --cask android-studio google-chrome \\
+                              visual-studio-code android-platform-tools
+FALLBACK
+  exit 1
+}
+
+preflight() {
+  step "Preflight"
+
+  # Already installed on a prior run -> we are past these gates.
+  if command -v nix &>/dev/null; then
+    ok "Nix already present — skipping preflight"
+    return
+  fi
+
+  # 1. Local admin (deterministic): the installer and darwin-rebuild need sudo.
+  if id -Gn 2>/dev/null | tr ' ' '\n' | grep -qx admin; then
+    ok "User '$(whoami)' is a local admin"
+  else
+    nix_fallback "your account is not a local administrator, so 'sudo' (required by the Nix installer and darwin-rebuild) is unavailable."
+  fi
+
+  # 2. sudo actually usable (MDM can restrict it even for admins).
+  info "Validating sudo (you may be prompted for your password)..."
+  if sudo -v; then
+    ok "sudo works"
+  else
+    nix_fallback "'sudo' could not be validated — it appears restricted on this machine."
+  fi
+
+  # 3. Root volume is APFS — Determinate creates an APFS volume for /nix.
+  if diskutil info / 2>/dev/null | grep -qiE "type \(bundle\):[[:space:]]+apfs"; then
+    ok "Root volume is APFS"
+  else
+    warn "Could not confirm the root volume is APFS — Determinate Nix requires it."
+    read -rp "Continue anyway? [y/N]: " _apfs || true
+    [[ "${_apfs:-}" =~ ^[Yy] ]] || nix_fallback "root volume does not appear to be APFS."
+  fi
+
+  # 4. MDM enrollment (heuristic): strict policies can block the /nix volume,
+  #    the installer binary, or network access to the Nix cache (proxy/DLP).
+  if profiles status -type enrollment 2>/dev/null | grep -qiE "mdm enrollment:[[:space:]]*yes"; then
+    warn "This Mac is enrolled in MDM. Light MDM is usually fine, but strict policies can block /nix volume creation, the installer, or the Nix binary cache."
+    if [[ "${ASSUME_MDM_OK:-}" != "1" ]]; then
+      read -rp "Proceed with Determinate Nix anyway? [y/N]: " _mdm || true
+      [[ "${_mdm:-}" =~ ^[Yy] ]] || nix_fallback "MDM-managed and you chose not to proceed. If a later step fails on volume/network, use the fallback above."
+    fi
+    ok "Proceeding despite MDM (per your confirmation)"
+  else
+    ok "No MDM enrollment detected"
+  fi
+}
+
+preflight
+
 # --- Xcode CLI Tools ---
 step "Xcode Command Line Tools"
 
