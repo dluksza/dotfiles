@@ -1,3 +1,5 @@
+{{- if eq .profile "personal" }}
 ["ThePathOfMastery"]
 url = "{{ onepasswordRead "op://Personal/ThePathOfMastery Vault/password" }}"
 type = "git-repo"
+{{- end }}

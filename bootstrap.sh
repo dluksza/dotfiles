@@ -15,8 +15,11 @@ set -euo pipefail
 
 # --- Config ---
 DOTFILES_REPO="https://github.com/dluksza/dotfiles.git"
-FLAKE_HOST=$(scutil --get LocalHostName) # auto-detect from macOS hostname
 CHEZMOI_DIR="$HOME/.local/share/chezmoi"
+# Machine profile: selects the flake attr (.#personal / .#work) AND the
+# chezmoi data profile. NOT the hostname. Override non-interactively with:
+#   PROFILE=work bash <(curl -sL .../bootstrap.sh)
+PROFILE="${PROFILE:-}"
 
 # --- Colors ---
 RED='\033[0;31m'
@@ -79,7 +82,23 @@ else
   ok "Keeping hostname: ${NEW_HOSTNAME}"
 fi
 
-FLAKE_HOST="${NEW_HOSTNAME}"
+# --- Profile ---
+step "Profile"
+# The flake attribute name is a selector, independent of the hostname above.
+if [[ -z "${PROFILE}" ]]; then
+  echo "Which profile is this machine?"
+  echo "  1) personal  — full setup (personal apps + dev stack)"
+  echo "  2) work      — Flutter dev stack only, no personal apps/secrets"
+  read -rp "Select [1/2]: " _pchoice
+  case "${_pchoice}" in
+    2) PROFILE="work" ;;
+    *) PROFILE="personal" ;;
+  esac
+fi
+if [[ "${PROFILE}" != "personal" && "${PROFILE}" != "work" ]]; then
+  fail "Invalid PROFILE '${PROFILE}' (expected 'personal' or 'work')"
+fi
+ok "Profile: ${PROFILE}"
 
 # --- Install Nix ---
 step "Nix"
@@ -135,9 +154,9 @@ fi
 
 if ! command -v darwin-rebuild &>/dev/null; then
   info "First-time nix-darwin install (reading from chezmoi source)..."
-  sudo nix run nix-darwin -- switch --flake "${BOOTSTRAP_FLAKE_DIR}#${FLAKE_HOST}"
+  sudo nix run nix-darwin -- switch --flake "${BOOTSTRAP_FLAKE_DIR}#${PROFILE}"
 else
-  sudo darwin-rebuild switch --flake "${BOOTSTRAP_FLAKE_DIR}#${FLAKE_HOST}"
+  sudo darwin-rebuild switch --flake "${BOOTSTRAP_FLAKE_DIR}#${PROFILE}"
 fi
 ok "System built and activated (1Password, chezmoi, packages installed)"
 
@@ -202,7 +221,8 @@ fi
 step "chezmoi"
 
 if command -v chezmoi &>/dev/null; then
-  chezmoi init --apply
+  # Seed the profile so chezmoi matches the nix-darwin build (email still prompts once).
+  CHEZMOI_PROFILE="${PROFILE}" chezmoi init --apply
   ok "Dotfiles applied"
 else
   fail "chezmoi not found after nix-darwin build. Is it in your nix config?"
@@ -241,8 +261,8 @@ step "Bootstrap complete! 🎉"
 cat <<DONE
 Your MacBook is ready.
 
-Rebuild after config changes:
-  darwin-rebuild switch --flake ~/.config/nix-darwin#${FLAKE_HOST}
+Rebuild after config changes (or just run 'rebuild'):
+  darwin-rebuild switch --flake ~/.config/nix-darwin#${PROFILE}
 
 Update dotfiles:
   chezmoi update

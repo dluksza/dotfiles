@@ -1,0 +1,3 @@
+function rebuild -d "darwin-rebuild switch for this machine's profile ({{ .profile }})"
+    sudo darwin-rebuild switch --flake ~/.config/nix-darwin/#{{ .profile }} $argv
+end

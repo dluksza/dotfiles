@@ -1,4 +1,11 @@
 {{- $email := promptStringOnce . "email" "Email address" -}}
+{{- /* Profile: seeded non-interactively by bootstrap via CHEZMOI_PROFILE;
+       falls back to an interactive choice. Once written to [data] below,
+       later `chezmoi apply` runs reuse it without prompting. */ -}}
+{{- $profile := env "CHEZMOI_PROFILE" -}}
+{{- if not $profile -}}
+{{-   $profile = promptChoiceOnce . "profile" "Profile" (list "personal" "work") "personal" -}}
+{{- end -}}
 
 encryption = "age"
 [age]
@@ -7,6 +14,7 @@ encryption = "age"
 
 [data]
   email = {{ $email | quote }}
+  profile = {{ $profile | quote }}
 
 [[textcov]]
   pattern = "**/*.plist"
