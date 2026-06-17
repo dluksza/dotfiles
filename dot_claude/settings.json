@@ -21,8 +21,7 @@
       "Bash(devenv:*)",
       "Bash(bun:*)",
       "WebFetch",
-      "WebSearch",
-      "Bash(~/.claude-code-docs/claude-docs-helper.sh:*)"
+      "WebSearch"
     ],
     "deny": [
       "Bash(git push --force:*)",
@@ -44,20 +43,8 @@
       "Write(./config/credentials.*)",
       "Write(./secrets/**)",
       "NotebookEdit"
-    ]
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude-code-docs/claude-docs-helper.sh hook-check"
-          }
-        ]
-      }
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "statusLine": {
     "type": "command",
@@ -65,10 +52,19 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "llm-application-dev@claude-code-workflows": true,
-    "agent-orchestration@claude-code-workflows": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
   },
+  "extraKnownMarketplaces": {
+    "callstack-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "callstackincubator/agent-skills"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
-  "model": "opus"
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }

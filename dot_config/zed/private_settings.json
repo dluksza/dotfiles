@@ -7,6 +7,18 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "project_panel": {
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "git_panel": {
+    "dock": "left"
+  },
   "vertical_scroll_margin": 10.0,
   "show_signature_help_after_edits": false,
   "auto_signature_help": true,
@@ -19,6 +31,7 @@
   },
   "helix_mode": false,
   "agent": {
+    "dock": "right",
     "favorite_models": [],
     "model_parameters": [],
     "enable_feedback": false
@@ -52,11 +65,12 @@
   },
   "redact_private_values": false,
   "agent_servers": {
-    "claude": {
+    "claude-acp": {
+      "type": "registry",
+      "default_model": "opus",
       "favorite_models": [
         "opus"
-      ],
-      "default_model": "opus"
+      ]
     }
   },
   "telemetry": {

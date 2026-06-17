@@ -1,3 +1,12 @@
+# Replacements for what /etc/zshrc would set up (skipped via NOSYSZSHRC=1)
+bindkey -e
+setopt HIST_IGNORE_DUPS SHARE_HISTORY HIST_FCNTL_LOCK
+
+# compinit -D: skip dump file (compdump hangs pathologically on this system).
+# Pay small per-shell init cost instead of writing/reading cache.
+autoload -Uz compinit && compinit -D
+autoload -Uz bashcompinit && bashcompinit
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
@@ -12,7 +21,6 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 zinit wait lucid light-mode for \
-    atinit"zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting \
     blockf atpull'zinit creinstall -q .' \
     zsh-users/zsh-completions \
@@ -37,7 +45,7 @@ zinit lucid reset \
   atload'zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}";' for \
     trapd00r/LS_COLORS
 
-zinit cdreplay -q
+# zinit cdreplay -q  # disabled: zicompinit/zicdreplay run deferred via atinit above
 
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
@@ -65,7 +73,10 @@ alias mls='melos'
 alias mlsck='melos check'
 alias mlsbs='melos bootstrap'
 
-eval "$(fzf --zsh)"
+# fzf --zsh hangs under zsh $() capture; cache to file and source instead
+[[ -d ~/.cache ]] || mkdir -p ~/.cache
+[[ -s ~/.cache/fzf-init.zsh ]] || fzf --zsh > ~/.cache/fzf-init.zsh
+source ~/.cache/fzf-init.zsh
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -75,7 +86,14 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"
 
 # direnv Initialization
-eval "$(direnv hook zsh)"
+# eval "$(direnv hook zsh)"
+DIRENV_DISABLE=1
 
 # starship initialization
-eval "$(starship init zsh)"
+# starship disabled: PROMPT='$(starship prompt …)' hangs in zsh prompt-render
+# (Go-binary $() interaction). Use static PROMPT until rooted-out.
+# [[ -s ~/.cache/starship-init.zsh ]] || starship init zsh > ~/.cache/starship-init.zsh
+# source ~/.cache/starship-init.zsh
+setopt prompt_subst
+PROMPT='%F{cyan}%n@%m%f %F{green}%~%f %# '
+RPROMPT=''

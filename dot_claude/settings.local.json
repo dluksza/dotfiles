@@ -7,7 +7,6 @@
   },
   "permissions": {
     "allow": [
-      "Bash(~/.claude-code-docs/claude-docs-helper.sh:*)",
       "WebSearch",
       "Skill(datetime)",
       "Bash(/Users/lock/.claude/skills/datetime/scripts/get_date.sh:*)",
@@ -16,7 +15,8 @@
       "Bash(/Users/lock/.claude/skills/macos-notifications/scripts/notify.sh:*)",
       "Skill(x-followers-skill)",
       "Bash(python:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(gh api *)"
     ],
     "deny": [],
     "ask": []

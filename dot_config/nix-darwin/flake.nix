@@ -3,11 +3,20 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # Pin direnv to 2.36.0 (last commit before nixpkgs bumped to 2.37.x, which hangs at startup)
+    nixpkgs-direnv-pin.url = "github:NixOS/nixpkgs/117b163b7844dca825a3b54fb473336126c55c9b";
     nix-darwin = {
         url = "github:nix-darwin/nix-darwin/master";
         inputs.nixpkgs.follows = "nixpkgs";
       };
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew = {
+        url = "github:zhaofengli-wip/nix-homebrew";
+        inputs.brew-src.follows = "brew-src";
+      };
+    brew-src = {
+        url = "github:Homebrew/brew";
+        flake = false;
+      };
     homebrew-core = {
         url = "github:homebrew/homebrew-core";
         flake = false;
@@ -27,6 +36,21 @@
     configuration = { pkgs, ... }: {
       nix.enable = false;
       nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = [
+        (final: prev: {
+          direnv = (import inputs.nixpkgs-direnv-pin {
+            inherit (prev.stdenv.hostPlatform) system;
+            config.allowUnfree = true;
+          }).direnv;
+          # folly 2026.01.19.00 fails to compile against libc++ 21: the removed
+          # _LIBCPP_HAS_ASAN macros make UninitializedMemoryHacks.h emit
+          # __sanitizer_annotate_contiguous_container with ASan off (undeclared
+          # identifier), breaking folly's consumers (fbthrift/wangle/watchman).
+          folly = prev.folly.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [ ./folly-libcxx21-asan.patch ];
+          });
+        })
+      ];
 
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
@@ -58,12 +82,10 @@
         hunspell
         watchman
         mas
-        spotify
         # yt-dlp
         maccy
         starship
         # gimp
-        telegram-desktop
         slack
         doppler
         devenv
@@ -75,16 +97,16 @@
         uv
         bun
         nodejs
-        (vscode-with-extensions.override {
-            vscodeExtensions = with vscode-extensions; [
-              dart-code.dart-code
-              dart-code.flutter
-              zhuangtongfa.material-theme
-              vscodevim.vim
-              streetsidesoftware.code-spell-checker
-              elixir-lsp.vscode-elixir-ls
-            ];
-          })
+        # (vscode-with-extensions.override {
+        #     vscodeExtensions = with vscode-extensions; [
+        #       dart-code.dart-code
+        #       dart-code.flutter
+        #       zhuangtongfa.material-theme
+        #       vscodevim.vim
+        #       streetsidesoftware.code-spell-checker
+        #       elixir-lsp.vscode-elixir-ls
+        #     ];
+        #   })
       ];
 
       fonts.packages = with pkgs; [
@@ -102,17 +124,12 @@
           taps = {
             "homebrew/homebrew-core" = inputs.homebrew-core;
             "homebrew/homebrew-cask" = inputs.homebrew-cask;
-            "homebrew/cask" = inputs.homebrew-cask;
             "leoafarias/homebrew-fvm" = inputs.homebrew-fvm;
           };
         };
 
       homebrew = {
           enable = true;
-          taps = [
-            "homebrew/cask"
-            "leoafarias/homebrew-fvm"
-          ];
            brews = [
             "fvm"
             "fastlane"
@@ -120,6 +137,7 @@
             "pre-commit"
             "openjdk@17"
             "ollama"
+            "lima"
           ];
           casks = [
             "1password"
@@ -137,9 +155,14 @@
             "gcloud-cli"
             "zed"
             "nordvpn"
+            "spotify"
+            "telegram-desktop"
+            "codex"
+            "garmin-express"
           ];
           masApps = {
-            "Toggl Track: Hours & Time Log" = 1291898086;
+            # "Toggl Track: Hours & Time Log" = 1291898086;
+            # "WireGuard" = 1451685025;
           };
           onActivation = {
             cleanup = "zap";
