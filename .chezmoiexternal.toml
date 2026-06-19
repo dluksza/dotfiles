@@ -1,4 +1,4 @@
-{{- if eq .profile "personal" }}
+{{- if eq (dig "profile" "personal" .) "personal" }}
 ["ThePathOfMastery"]
 url = "{{ onepasswordRead "op://Personal/ThePathOfMastery Vault/password" }}"
 type = "git-repo"

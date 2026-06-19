@@ -3,7 +3,7 @@ README.md
 bootstrap.sh
 
 {{- /* Patterns below are TARGET paths (relative to $HOME), not source names. */}}
-{{- if ne .profile "personal" }}
+{{- if ne (dig "profile" "personal" .) "personal" }}
 {{- /* Old-employer / personal-only configs: never materialize on the work machine. */}}
 .aws
 .saml2aws
