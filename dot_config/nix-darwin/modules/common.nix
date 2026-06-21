@@ -1,5 +1,6 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, user, uid, ... }:
 # Shared baseline for ALL machines (personal + work).
+# `user` and `uid` are supplied per-host via `_module.args` in ../hosts/*.nix.
 # Anything in here is identical on every host. Host-specific or
 # profile-specific additions live in ./flutter.nix, ./personal.nix
 # and the per-host files under ../hosts/.
@@ -64,7 +65,7 @@
   nix-homebrew = {
     enable = true;
     enableRosetta = true;
-    user = "darek";
+    user = user;
     autoMigrate = false;
     mutableTaps = true;
     taps = {
@@ -76,6 +77,14 @@
 
   homebrew = {
     enable = true;
+    # Declared so `onActivation.cleanup` does not try to untap them — Homebrew
+    # refuses to untap while a tap still owns installed formulae/casks, which
+    # otherwise fails the rebuild. leoafarias/fvm is declared in ./flutter.nix
+    # next to the fvm brew that needs it.
+    taps = [
+      "homebrew/core"
+      "homebrew/cask"
+    ];
     # Casks present on every machine. Profile-specific casks are added
     # in ./flutter.nix / ./personal.nix / ../hosts/work.nix.
     casks = [
@@ -109,7 +118,7 @@
   system.stateVersion = 6;
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  system.primaryUser = "darek";
+  system.primaryUser = user;
   system.defaults = {
     dock = {
       largesize = 64;
@@ -231,7 +240,7 @@
       KbdInteractiveAuthentication no
       MaxAuthTries 3
       MaxSessions 3
-      AllowUsers darek
+      AllowUsers ${user}
       ClientAliveInterval 300
       ClientAliveCountMax 2
       X11Forwarding no
@@ -259,12 +268,12 @@
     enable = true;
   };
 
-  users.knownUsers = [ "darek" ];
-  users.users.darek = {
-    uid = 501;
+  users.knownUsers = [ user ];
+  users.users.${user} = {
+    uid = uid;
     shell = pkgs.fish;
   };
-  nix.settings.trusted-users = [ "darek" ];
+  nix.settings.trusted-users = [ user ];
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";

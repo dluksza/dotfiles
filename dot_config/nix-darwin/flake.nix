@@ -33,28 +33,23 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, ... }:
   let
-    # Build a darwin system from a single host module. `inputs` (incl. self)
-    # is threaded into every module via specialArgs so modules can reach the
-    # flake inputs (direnv pin overlay, homebrew taps, configurationRevision).
-    mkSystem = hostModule: nix-darwin.lib.darwinSystem {
+    # Each profile is a host file under ./hosts/ that imports the shared
+    # ./modules/. The per-machine login account (user + uid) is hardcoded in
+    # the host file via `_module.args` — Nix evaluates purely and cannot run
+    # `id -u` itself; bootstrap.sh prints the values to fill in for `work`.
+    mkSystem = host: nix-darwin.lib.darwinSystem {
       specialArgs = { inherit inputs; };
       modules = [
         nix-homebrew.darwinModules.nix-homebrew
-        hostModule
+        host
       ];
     };
-
-    personalSystem = mkSystem ./hosts/personal.nix;
   in
   {
-    # Select the profile explicitly at build time — the attribute name is a
-    # selector, NOT the machine hostname:
-    #   personal:  darwin-rebuild switch --flake .#personal   (alias: .#ziutaPro)
-    #   work:      darwin-rebuild switch --flake .#work
-    darwinConfigurations = {
-      personal = personalSystem;
-      ziutaPro = personalSystem; # backwards-compatible alias for the personal Mac
-      work     = mkSystem ./hosts/work.nix;
-    };
+    # Build with (profile is a selector, independent of hostname):
+    # $ darwin-rebuild switch --flake ~/.config/nix-darwin#personal
+    # $ darwin-rebuild switch --flake ~/.config/nix-darwin#work
+    darwinConfigurations.personal = mkSystem ./hosts/personal.nix;
+    darwinConfigurations.work = mkSystem ./hosts/work.nix;
   };
 }

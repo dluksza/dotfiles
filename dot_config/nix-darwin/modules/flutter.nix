@@ -7,6 +7,11 @@
 # (App Store), not declared here.
 {
   homebrew = {
+    # fvm is served by the leoafarias/fvm tap. Declare it so onActivation
+    # cleanup keeps it instead of failing to untap it (it owns the fvm brew).
+    taps = [
+      "leoafarias/fvm"
+    ];
     brews = [
       "fvm"        # Flutter version manager
       "fastlane"   # iOS/Android release automation

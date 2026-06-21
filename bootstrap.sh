@@ -176,6 +176,26 @@ if [[ "${PROFILE}" != "personal" && "${PROFILE}" != "work" ]]; then
 fi
 ok "Profile: ${PROFILE}"
 
+# --- Account identity (user + uid baked into the nix-darwin host file) ---
+# Nix evaluates the flake purely and cannot run `id -u` itself, so the login
+# account lives in hosts/<profile>.nix (`_module.args.user/uid`). Surface the
+# real values here and refuse to build while the work host still has the
+# placeholder — otherwise nix-darwin would manage the wrong account.
+step "Account identity"
+DETECTED_USER="$(whoami)"
+DETECTED_UID="$(id -u)"
+info "This account: ${DETECTED_USER} (uid ${DETECTED_UID})"
+
+HOST_FILE="${CHEZMOI_DIR}/dot_config/nix-darwin/hosts/${PROFILE}.nix"
+if [[ -f "${HOST_FILE}" ]] && grep -q 'WORK_USERNAME' "${HOST_FILE}"; then
+  warn "${HOST_FILE} still has placeholder account values."
+  echo "Set them to this machine's account, commit, then re-run bootstrap:"
+  echo "    _module.args.user = \"${DETECTED_USER}\";"
+  echo "    _module.args.uid  = ${DETECTED_UID};"
+  fail "Edit hosts/${PROFILE}.nix and re-run."
+fi
+ok "Using account settings from hosts/${PROFILE}.nix"
+
 # --- Install Nix ---
 step "Nix"
 

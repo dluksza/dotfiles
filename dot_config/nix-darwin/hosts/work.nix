@@ -10,6 +10,12 @@
     ../modules/flutter.nix
   ];
 
+  # Company laptop login account. Set these to THIS machine's values:
+  #   user = output of `whoami`   |   uid = output of `id -u`
+  # bootstrap.sh prints both and refuses to build while the placeholder remains.
+  _module.args.user = "WORK_USERNAME";
+  _module.args.uid = 501;
+
   # VS Code with the Flutter/Dart stack baked in (declarative, reproducible).
   # Extension versions track nixpkgs; if you need bleeding-edge extensions,
   # swap this for the `vscode` cask + `code --install-extension`.
