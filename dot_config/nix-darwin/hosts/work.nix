@@ -33,8 +33,15 @@
     })
   ];
 
+  homebrew.brews = [
+    "docker"            # Docker CLI client
+    "devcontainer"      # Dev Containers CLI
+    "openapi-generator" # OpenAPI client/server codegen
+  ];
   homebrew.casks = [
     "android-platform-tools" # standalone adb / fastboot on PATH
+    "claude-code"            # Claude Code CLI
+    "docker-desktop"         # Docker Desktop (engine + GUI)
   ];
 
   # OPTIONAL: give the machine a stable name on every rebuild. Left disabled
