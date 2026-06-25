@@ -182,19 +182,32 @@ ok "Profile: ${PROFILE}"
 # real values here and refuse to build while the work host still has the
 # placeholder — otherwise nix-darwin would manage the wrong account.
 step "Account identity"
-DETECTED_USER="$(whoami)"
-DETECTED_UID="$(id -u)"
-info "This account: ${DETECTED_USER} (uid ${DETECTED_UID})"
+# hosts/<profile>.nix hardcodes the login account (user + uid) that
+# system.primaryUser tracks. Verify it against the real account on this Mac so
+# user-level macOS defaults target the right user. On the work Mac this is the
+# non-admin account (e.g. DarLuk), even though darwin-rebuild runs from the
+# admin account — `id -u <user>` resolves any user, so run this as either.
+info "This account: $(id -un) (uid $(id -u))"
 
 HOST_FILE="${CHEZMOI_DIR}/dot_config/nix-darwin/hosts/${PROFILE}.nix"
-if [[ -f "${HOST_FILE}" ]] && grep -q 'WORK_USERNAME' "${HOST_FILE}"; then
-  warn "${HOST_FILE} still has placeholder account values."
-  echo "Set them to this machine's account, commit, then re-run bootstrap:"
-  echo "    _module.args.user = \"${DETECTED_USER}\";"
-  echo "    _module.args.uid  = ${DETECTED_UID};"
-  fail "Edit hosts/${PROFILE}.nix and re-run."
+CFG_USER=$(sed -n 's/.*_module\.args\.user *= *"\([^"]*\)".*/\1/p' "${HOST_FILE}" | head -1)
+CFG_UID=$(sed -n 's/.*_module\.args\.uid *= *\([0-9]\{1,\}\).*/\1/p' "${HOST_FILE}" | head -1)
+info "hosts/${PROFILE}.nix account: ${CFG_USER:-?} (uid ${CFG_UID:-?})"
+
+if [[ -z "${CFG_USER}" || -z "${CFG_UID}" ]]; then
+  fail "Could not read _module.args.user/uid from ${HOST_FILE}."
 fi
-ok "Using account settings from hosts/${PROFILE}.nix"
+if ! REAL_UID=$(id -u "${CFG_USER}" 2>/dev/null); then
+  warn "Account '${CFG_USER}' (from hosts/${PROFILE}.nix) does not exist here."
+  echo "Set _module.args.user to the real short name (this account is $(id -un))."
+  fail "Fix hosts/${PROFILE}.nix, commit, and re-run."
+fi
+if [[ "${REAL_UID}" != "${CFG_UID}" ]]; then
+  warn "uid mismatch: ${CFG_USER} is uid ${REAL_UID}, hosts/${PROFILE}.nix says ${CFG_UID}."
+  echo "Set: _module.args.uid = ${REAL_UID};"
+  fail "Fix hosts/${PROFILE}.nix, commit, and re-run."
+fi
+ok "Account ${CFG_USER} (uid ${REAL_UID}) matches hosts/${PROFILE}.nix"
 
 # --- Install Nix ---
 step "Nix"

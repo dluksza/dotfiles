@@ -113,6 +113,25 @@
     remapCapsLockToEscape = true;
   };
 
+  # macOS drops the hidutil UserKeyMapping on reboot (nix-darwin#905), so the
+  # system.keyboard remap above survives only until the next restart. Reapply
+  # it at every login via a global LaunchAgent (/Library/LaunchAgents loads in
+  # each user's GUI session, including the non-admin work account). hidutil
+  # needs no root, so it runs fine in a user-context agent. Keep these keycodes
+  # in sync with system.keyboard: caps->esc (30064771129->30064771113) and the
+  # non-US tilde swap (30064771172->30064771125).
+  launchd.agents.keyboard-remap = {
+    serviceConfig = {
+      ProgramArguments = [
+        "/usr/bin/hidutil"
+        "property"
+        "--set"
+        ''{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":30064771129,"HIDKeyboardModifierMappingDst":30064771113},{"HIDKeyboardModifierMappingSrc":30064771172,"HIDKeyboardModifierMappingDst":30064771125}]}''
+      ];
+      RunAtLoad = true;
+    };
+  };
+
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 6;

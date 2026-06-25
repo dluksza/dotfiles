@@ -10,11 +10,13 @@
     ../modules/flutter.nix
   ];
 
-  # Company laptop login account. Set these to THIS machine's values:
-  #   user = output of `whoami`   |   uid = output of `id -u`
-  # bootstrap.sh prints both and refuses to build while the placeholder remains.
-  _module.args.user = "WORK_USERNAME";
-  _module.args.uid = 501;
+  # Daily (non-admin) work account. system.primaryUser tracks this, so all
+  # per-user macOS defaults (dock, finder, shortcuts, ...) land here even though
+  # `sudo darwin-rebuild` is run from the admin account (DarLukAdmin). Confirm
+  # on the machine: short name = `id -un`, uid = `id -u <user>` (case-sensitive).
+  # bootstrap.sh verifies these and prints the correct uid if this is wrong.
+  _module.args.user = "DarLuk";
+  _module.args.uid = 503; # DarLuk, from `id -u DarLuk`
 
   # VS Code with the Flutter/Dart stack baked in (declarative, reproducible).
   # Extension versions track nixpkgs; if you need bleeding-edge extensions,
