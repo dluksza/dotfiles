@@ -13,8 +13,11 @@ function system-update -d "Update system: nix flake, darwin-rebuild, garbage col
     echo "━━━ macOS updates ━━━"
     softwareupdate -i -a
 
-    echo "━━━ Syncing dotfiles ━━━"
-    chezmoi re-add
+    echo "━━━ Syncing flake lock ━━━"
+    # Sync ONLY the generated flake.lock from the deployed flake. Never
+    # `chezmoi re-add` here: it re-imports every managed file and silently
+    # reverts un-applied source edits (this clobbered hosts/*.nix repeatedly).
+    cp ~/.config/nix-darwin/flake.lock ~/.local/share/chezmoi/dot_config/nix-darwin/flake.lock
     git -C ~/.local/share/chezmoi add dot_config/nix-darwin/flake.lock
     git -C ~/.local/share/chezmoi diff --cached --quiet || git -C ~/.local/share/chezmoi commit -m "Update nix flake lock"
     git -C ~/.local/share/chezmoi push
