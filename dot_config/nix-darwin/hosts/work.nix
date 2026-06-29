@@ -17,6 +17,11 @@
   # bootstrap.sh verifies these and prints the correct uid if this is wrong.
   _module.args.user = "DarLuk";
   _module.args.uid = 503; # DarLuk, from `id -u DarLuk`
+  # Homebrew owner + the account that runs `brew bundle` during activation.
+  # Casks (stats, ...) install to /Applications, writable only by the admin
+  # group, so the non-admin DarLuk cannot install them — run brew as the admin.
+  # /opt/homebrew must be owned by it: sudo chown -R DarLukAdmin /opt/homebrew
+  _module.args.adminUser = "DarLukAdmin";
 
   # VS Code with the Flutter/Dart stack baked in (declarative, reproducible).
   # Extension versions track nixpkgs; if you need bleeding-edge extensions,
