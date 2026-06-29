@@ -10,18 +10,17 @@
     ../modules/flutter.nix
   ];
 
-  # Daily (non-admin) work account. system.primaryUser tracks this, so all
-  # per-user macOS defaults (dock, finder, shortcuts, ...) land here even though
-  # `sudo darwin-rebuild` is run from the admin account (DarLukAdmin). Confirm
-  # on the machine: short name = `id -un`, uid = `id -u <user>` (case-sensitive).
-  # bootstrap.sh verifies these and prints the correct uid if this is wrong.
-  _module.args.user = "DarLuk";
-  _module.args.uid = 503; # DarLuk, from `id -u DarLuk`
+  # Daily (non-admin) work account (exact short name from `dscl . -list /Users`).
+  # system.primaryUser tracks this, so all per-user macOS defaults (dock,
+  # finder, shortcuts, ...) land here even though `sudo darwin-rebuild` runs
+  # from the admin account (darlukadmin). Short names are case-sensitive here.
+  _module.args.user = "darluk";
+  _module.args.uid = 503; # darluk, from `dscl . -list /Users UniqueID`
   # Homebrew owner + the account that runs `brew bundle` during activation.
   # Casks (stats, ...) install to /Applications, writable only by the admin
-  # group, so the non-admin DarLuk cannot install them — run brew as the admin.
-  # /opt/homebrew must be owned by it: sudo chown -R DarLukAdmin /opt/homebrew
-  _module.args.adminUser = "DarLukAdmin";
+  # group, so the non-admin darluk cannot install them — run brew as the admin.
+  # /opt/homebrew must be owned by it: sudo chown -R darlukadmin /opt/homebrew
+  _module.args.adminUser = "darlukadmin";
 
   # VS Code with the Flutter/Dart stack baked in (declarative, reproducible).
   # Extension versions track nixpkgs; if you need bleeding-edge extensions,
