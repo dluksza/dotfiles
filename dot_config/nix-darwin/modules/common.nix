@@ -9,6 +9,15 @@
 # and the per-host files under ../hosts/.
 {
   nix.enable = false;
+  # Temp workaround: nix-darwin's HTML manual builder (rev a1fa429, current
+  # master) passes `--toc-depth`, which newer nixpkgs-unstable nixos-render-docs
+  # removed in favor of `--sidebar-depth`, breaking darwin-manual-html /
+  # darwin-help. Disabling the HTML doc keeps manpages. The darwin-uninstaller
+  # package embeds its own default darwin-system (doc.enable=true) that also
+  # builds the manual, so it must be disabled too. Remove both once nix-darwin
+  # PR #1818 lands on master and the lock is updated.
+  documentation.doc.enable = false;
+  system.tools.darwin-uninstaller.enable = false;
   nixpkgs.config.allowUnfree = true;
   nixpkgs.overlays = [
     (final: prev: {
