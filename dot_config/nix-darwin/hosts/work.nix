@@ -10,17 +10,11 @@
     ../modules/flutter.nix
   ];
 
-  # Daily (non-admin) work account (exact short name from `dscl . -list /Users`).
-  # system.primaryUser tracks this, so all per-user macOS defaults (dock,
-  # finder, shortcuts, ...) land here even though `sudo darwin-rebuild` runs
-  # from the admin account (darlukadmin). Short names are case-sensitive here.
-  _module.args.user = "darluk";
-  _module.args.uid = 503; # darluk, from `dscl . -list /Users UniqueID`
-  # Homebrew owner + the account that runs `brew bundle` during activation.
-  # Casks (stats, ...) install to /Applications, writable only by the admin
-  # group, so the non-admin darluk cannot install them — run brew as the admin.
-  # /opt/homebrew must be owned by it: sudo chown -R darlukadmin /opt/homebrew
-  _module.args.adminUser = "darlukadmin";
+  # Company laptop login account. Set these to THIS machine's values:
+  #   user = output of `whoami`   |   uid = output of `id -u`
+  # bootstrap.sh prints both and refuses to build while the placeholder remains.
+  _module.args.user = "WORK_USERNAME";
+  _module.args.uid = 501;
 
   # VS Code with the Flutter/Dart stack baked in (declarative, reproducible).
   # Extension versions track nixpkgs; if you need bleeding-edge extensions,
@@ -37,16 +31,8 @@
     })
   ];
 
-  homebrew.brews = [
-    "docker"            # Docker CLI client
-    "devcontainer"      # Dev Containers CLI
-    "openapi-generator" # OpenAPI client/server codegen
-    "yarn"
-  ];
   homebrew.casks = [
     "android-platform-tools" # standalone adb / fastboot on PATH
-    "claude-code"            # Claude Code CLI
-    "docker-desktop"         # Docker Desktop (engine + GUI)
   ];
 
   # OPTIONAL: give the machine a stable name on every rebuild. Left disabled
