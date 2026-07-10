@@ -1,9 +1,11 @@
 { pkgs, inputs, user, uid, adminUser, ... }:
 # Shared baseline for ALL machines (personal + work).
-# `user`/`uid` are the login account; `adminUser` owns Homebrew and runs the
-# `brew bundle` install step (casks need an admin to write /Applications). All
-# three are supplied per-host via `_module.args` in ../hosts/*.nix. On a
-# single-account machine (personal) set adminUser equal to user.
+# `user`/`uid` are the login account; `adminUser` owns AND runs Homebrew:
+# nix-darwin runs `brew bundle` as `sudo --user=homebrew.user` (defaults to
+# system.primaryUser), and casks install to /Applications which only the admin
+# group can write — so both nix-homebrew.user and homebrew.user must be the
+# admin account. All three args come per-host via `_module.args` in
+# ../hosts/*.nix. On a single-account machine (personal) set adminUser = user.
 # Anything in here is identical on every host. Host-specific or
 # profile-specific additions live in ./flutter.nix, ./personal.nix
 # and the per-host files under ../hosts/.
@@ -77,7 +79,7 @@
   nix-homebrew = {
     enable = true;
     enableRosetta = true;
-    user = adminUser;
+    user = adminUser; # owns /opt/homebrew
     autoMigrate = false;
     mutableTaps = true;
     taps = {
@@ -89,6 +91,10 @@
 
   homebrew = {
     enable = true;
+    # Run `brew bundle` as the admin account (matches nix-homebrew.user above).
+    # Without this it defaults to system.primaryUser (the non-admin login user),
+    # which cannot write /opt/homebrew nor install casks to /Applications.
+    user = adminUser;
     # Declared so `onActivation.cleanup` does not try to untap them — Homebrew
     # refuses to untap while a tap still owns installed formulae/casks, which
     # otherwise fails the rebuild. leoafarias/fvm is declared in ./flutter.nix
