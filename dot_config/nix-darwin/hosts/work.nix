@@ -41,6 +41,7 @@
     "docker"            # Docker CLI client
     "devcontainer"      # Dev Containers CLI
     "openapi-generator" # OpenAPI client/server codegen
+    "yarn"
   ];
   homebrew.casks = [
     "android-platform-tools" # standalone adb / fastboot on PATH
