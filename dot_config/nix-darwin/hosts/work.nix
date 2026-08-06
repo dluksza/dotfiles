@@ -13,8 +13,9 @@
   # Company laptop login account. Set these to THIS machine's values:
   #   user = output of `whoami`   |   uid = output of `id -u`
   # bootstrap.sh prints both and refuses to build while the placeholder remains.
-  _module.args.user = "WORK_USERNAME";
-  _module.args.uid = 501;
+  _module.args.user = "darluk";
+  _module.args.adminUser = "darlukadmin";
+  _module.args.uid = 503;
 
   # VS Code with the Flutter/Dart stack baked in (declarative, reproducible).
   # Extension versions track nixpkgs; if you need bleeding-edge extensions,
@@ -31,8 +32,13 @@
     })
   ];
 
+  homebrew.brews = [
+    "openapi-generator"
+  ];
+
   homebrew.casks = [
     "android-platform-tools" # standalone adb / fastboot on PATH
+    "claude-code"
   ];
 
   # OPTIONAL: give the machine a stable name on every rebuild. Left disabled
