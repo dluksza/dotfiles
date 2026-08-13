@@ -33,6 +33,7 @@
   ];
 
   homebrew.brews = [
+    "awscli"
     "openapi-generator"
   ];
 
