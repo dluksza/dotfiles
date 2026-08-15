@@ -29,6 +29,13 @@
       url = "github:leoafarias/homebrew-fvm";
       flake = false;
     };
+    # oMLX ships its Homebrew formula from the project repo itself
+    # (github:jundot/omlx, Formula/omlx.rb) — the repo is NOT named
+    # homebrew-omlx, so nix-homebrew must supply the tap directory.
+    homebrew-omlx = {
+      url = "github:jundot/omlx";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, ... }:

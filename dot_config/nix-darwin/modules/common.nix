@@ -56,7 +56,6 @@
     tree
     aspell
     hunspell
-    watchman
     mas
     maccy
     starship
@@ -86,6 +85,10 @@
       "homebrew/homebrew-core" = inputs.homebrew-core;
       "homebrew/homebrew-cask" = inputs.homebrew-cask;
       "leoafarias/homebrew-fvm" = inputs.homebrew-fvm;
+      # Homebrew resolves tap `jundot/omlx` to this directory name; the
+      # upstream repo is `omlx`, so a plain `brew tap jundot/omlx` would
+      # 404 — the flake input is what makes it resolvable.
+      "jundot/homebrew-omlx" = inputs.homebrew-omlx;
     };
   };
 
@@ -102,6 +105,15 @@
     taps = [
       "homebrew/core"
       "homebrew/cask"
+    ];
+    # Formulae present on every machine.
+    brews = [
+      # watchman was pkgs.watchman until nixpkgs folly 2026.01.19.00 stopped
+      # compiling against libc++ 21 (see ../folly-libcxx21-asan.patch), which
+      # broke the whole folly -> fizz/wangle/fbthrift/edencommon/mvfst ->
+      # watchman chain and with it system-path. homebrew-core ships an
+      # arm64 bottle, so nothing is built locally.
+      "watchman"
     ];
     # Casks present on every machine. Profile-specific casks are added
     # in ./flutter.nix / ./personal.nix / ../hosts/work.nix.
