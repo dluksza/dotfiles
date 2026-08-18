@@ -33,6 +33,7 @@
   ];
 
   homebrew.brews = [
+    "tfenv"
     "awscli"
     "openapi-generator"
   ];
