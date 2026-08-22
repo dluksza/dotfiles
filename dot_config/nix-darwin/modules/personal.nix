@@ -44,7 +44,7 @@
     casks = [
       "synology-drive"
       "google-drive"
-      "logi-options+"
+      "openlogi"
       "gcloud-cli"
       "zed"
       "nordvpn"
