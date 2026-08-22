@@ -16,7 +16,7 @@ encryption = "age"
   email = {{ $email | quote }}
   profile = {{ $profile | quote }}
 
-[[textcov]]
+[[textconv]]
   pattern = "**/*.plist"
   command = "plutil"
-  args = ["-convert", "xml1", "-o", "-"]
+  args = ["-convert", "xml1", "-o", "-", "-"]
