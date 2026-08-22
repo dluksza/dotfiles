@@ -7,6 +7,13 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "edit_predictions": {
+    "allow_data_collection": "no"
+  },
+  "colorize_brackets": true,
+  "horizontal_scroll_margin": 8.0,
+  "excerpt_context_lines": 6,
+  "expand_excerpt_lines": 10,
   "project_panel": {
     "dock": "left"
   },
@@ -19,7 +26,7 @@
   "git_panel": {
     "dock": "left"
   },
-  "vertical_scroll_margin": 10.0,
+  "vertical_scroll_margin": 15.0,
   "show_signature_help_after_edits": false,
   "auto_signature_help": true,
   "tabs": {
