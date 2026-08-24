@@ -21,6 +21,7 @@
   # Extension versions track nixpkgs; if you need bleeding-edge extensions,
   # swap this for the `vscode` cask + `code --install-extension`.
   environment.systemPackages = with pkgs; [
+    docker
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         dart-code.dart-code
