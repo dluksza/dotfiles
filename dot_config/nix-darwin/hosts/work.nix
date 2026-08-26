@@ -22,6 +22,7 @@
   # swap this for the `vscode` cask + `code --install-extension`.
   environment.systemPackages = with pkgs; [
     docker
+    devcontainer
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         dart-code.dart-code
