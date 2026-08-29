@@ -121,7 +121,6 @@
       "1password"
       "brave-browser"
       "stats"
-      "hammerspoon"
       "jordanbaird-ice"
       "font-sf-pro"
     ];

@@ -7,6 +7,7 @@
     doppler
     devenv
     rustup
+    aerospace # tiling WM; agent + config notes below
   ];
 
   homebrew = {
@@ -61,4 +62,31 @@
   system.defaults.dock.persistent-apps = lib.mkAfter [
     "${pkgs.obsidian}/Applications/Obsidian.app/"
   ];
+
+  # AeroSpace — i3-like tiling window manager, replacing the Hammerspoon config
+  # that only held the cmd-alt-t / cmd-alt-b launchers.
+  #
+  # Deliberately NOT nix-darwin's `services.aerospace`: that module always
+  # passes `--config-path` to a TOML generated from its `settings` option, so
+  # the config would live in the nix store and every keybinding tweak would
+  # need a rebuild. (Its `optionalString (cfg.settings != {})` guard never
+  # fires — the settings submodule's own option defaults keep the attrset
+  # non-empty even when you set nothing.)
+  #
+  # With no --config-path, AeroSpace falls back to its own config search and
+  # finds the chezmoi-managed ~/.config/aerospace/aerospace.toml, which sets
+  # auto-reload-config — so edits apply on save, the loop the
+  # ReloadConfiguration spoon used to give Hammerspoon. Only a version bump or
+  # a change to this block needs `darwin-rebuild switch`.
+  #
+  # launchd owns startup, so aerospace.toml keeps `start-at-login = false`.
+  # AeroSpace needs macOS Accessibility permission; expect a re-prompt after
+  # version bumps, since the store path changes.
+  launchd.user.agents.aerospace = {
+    command = "${pkgs.aerospace}/Applications/AeroSpace.app/Contents/MacOS/AeroSpace";
+    serviceConfig = {
+      KeepAlive = true;
+      RunAtLoad = true;
+    };
+  };
 }
