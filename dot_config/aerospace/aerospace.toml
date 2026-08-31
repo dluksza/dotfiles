@@ -1,122 +1,219 @@
-# AeroSpace — i3-like tiling window manager.
-# Managed by chezmoi; the launchd agent that starts AeroSpace is declared in
-# ~/.config/nix-darwin/modules/aerospace.nix. Bindings below replace the
-# cmd-alt-t / cmd-alt-b launchers that used to live in ~/.hammerspoon/init.lua.
+# AeroSpace — tiling window manager. Managed by chezmoi; the launchd agent that
+# starts it lives in ~/.config/nix-darwin/modules/personal.nix.
+# Edit: `chezmoi edit ~/.config/aerospace/aerospace.toml && chezmoi apply`.
+# auto-reload-config applies changes on save — no rebuild, no restart.
 #
-# Edit with `chezmoi edit ~/.config/aerospace/aerospace.toml && chezmoi apply`.
-# auto-reload-config picks the change up on save — no rebuild, no restart.
-# (After the very first apply, run `aerospace reload-config` once to arm it.)
+# Two constraints shape everything below, both from this machine:
+#   * macOS layout is Polish Pro, where diacritics are Option+a/c/e/l/n/o/s/x/z.
+#     AeroSpace grabs bound keys globally, so plain alt- bindings would eat
+#     ą ć ę ł ń ó ś ż ź — alt-l alone kills ł. Hence cmd-alt throughout.
+#     Cost: cmd-alt-h takes over macOS "Hide Others".
+#   * 38-key Totem (~/workspace/zmk-config-totem). cmd-alt is one ungated left
+#     pinky hold (`&mt LA(LGUI) TAB`, position 20); digits and most punctuation
+#     sit behind layers. So: workspaces are NAMED 1-5 but reached by the
+#     right-hand letters y/u/i/o/p (opposite hand from the modifier), and
+#     multi-step operations live in bare-key modes rather than deeper chords.
 
 config-version = 2
 
-# launchd (nix-darwin) starts AeroSpace, so it must not also start itself.
+# launchd starts AeroSpace, so it must not start itself.
 start-at-login = false
 auto-reload-config = true
 
-# Keep the window tree flat and sanely oriented.
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
 default-root-container-layout = 'tiles'
-# Wide monitor -> horizontal split, tall monitor -> vertical.
-default-root-container-orientation = 'auto'
+default-root-container-orientation = 'auto' # wide monitor -> horizontal
 accordion-padding = 30
 
-# Pointer follows keyboard focus across monitors.
+# Pointer follows focus across monitors. cmd-alt-n relies on this firing.
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# false = leave macOS cmd-h "Hide application" behavior alone.
 automatically-unhide-macos-hidden-apps = false
-
 focus-follows-mouse.enabled = false
 key-mapping.preset = 'qwerty'
 
-gaps.inner.horizontal = 8
-gaps.inner.vertical = 8
-gaps.outer.left = 8
-gaps.outer.bottom = 8
-gaps.outer.top = 8
-gaps.outer.right = 8
+# Names NOT listed here stay available as stub workspaces — the placeholder a
+# monitor shows when its own workspace is summoned away.
+persistent-workspaces = ['1', '2', '3', '4', '5']
+
+gaps.inner.horizontal = 0
+gaps.inner.vertical = 0
+gaps.outer.left = 0
+gaps.outer.bottom = 0
+gaps.outer.top = 0
+gaps.outer.right = 0
+
+# Matched on bundle id (`mdls -name kMDItemCFBundleIdentifier -r /Applications/X.app`);
+# app *names* lie — Telegram's window says "Telegram", the bundle is
+# "Telegram Desktop.app". The `if = 'test %{...}'` form is current; the widely
+# copied `if.app-id` is soft-deprecated upstream.
+# Rules fire on window DETECTION only: they re-run at AeroSpace startup, but
+# never retroactively on reload. Move existing windows by hand.
+on-window-detected = [
+  { if = 'test %{app-bundle-id} = com.github.wez.wezterm', run = 'move-node-to-workspace 1' },
+  { if = 'test %{app-bundle-id} = com.brave.Browser || test %{app-bundle-id} = app.zen-browser.zen', run = 'move-node-to-workspace 2' },
+  { if = 'test %{app-bundle-id} = dev.zed.Zed || test %{app-bundle-id} = com.microsoft.VSCode', run = 'move-node-to-workspace 3' },
+  # Floating, and deliberately unassigned: peek.sh pulls these to whichever
+  # workspace is focused, so a pin would fight it. Floating is also what lets
+  # Hammerspoon place them — AeroSpace refuses to move or resize a floating
+  # window itself (upstream issue #9).
+  { if = 'test %{app-bundle-id} = com.tinyspeck.slackmacgap', run = 'layout floating' },
+  { if = 'test %{app-bundle-id} = com.tdesktop.Telegram', run = 'layout floating' },
+  { if = 'test %{app-bundle-id} = com.spotify.client', run = 'layout floating' },
+]
+
+# Matching by monitor name degrades gracefully: undocked, the pattern matches
+# nothing and the assignment is simply dropped. Pinning is not free — it
+# disables summon-workspace and move-workspace-to-monitor for that workspace —
+# so 2 and 3 are pinned by choice, to keep them off the laptop even if the main
+# display changes, not because the default would place them elsewhere.
+[workspace-to-monitor-force-assignment]
+1 = 'built-in.*' # WezTerm on the laptop panel
+2 = 'dell.*'     # Brave + Zen
+3 = 'dell.*'     # Zed + VS Code
 
 [mode.main.binding]
 
-# --- Layout ------------------------------------------------------------
-alt-slash = 'layout tiles horizontal vertical'
-alt-comma = 'layout accordion horizontal vertical'
-alt-f = 'fullscreen'
-alt-shift-space = 'layout floating tiling'
+# Workspaces, plain switches. Apps reach their workspace via on-window-detected
+# instead, so these keys never steal focus to an app you were not using.
+cmd-alt-y = 'workspace 1'
+cmd-alt-u = 'workspace 2'
+cmd-alt-i = 'workspace 3'
+cmd-alt-o = 'workspace 4'
+cmd-alt-p = 'workspace 5'
 
-# --- Focus / move ------------------------------------------------------
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
-
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
-
-# --- Quick resize without entering resize mode -------------------------
-alt-minus = 'resize smart -50'
-alt-equal = 'resize smart +50'
-
-# --- Workspaces --------------------------------------------------------
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
-
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-
-alt-tab = 'workspace-back-and-forth'
-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
-
-# --- Modes -------------------------------------------------------------
-alt-r = 'mode resize'
-alt-shift-semicolon = 'mode service'
-
-# --- App launchers (ported from .hammerspoon/init.lua) -----------------
-# `open -a` matches hs.application.launchOrFocus: it activates a running app
-# rather than starting a second copy. Untested edge case: the app's window
-# sitting on an INACTIVE workspace — AeroSpace does not document whether it
-# follows. If that misbehaves, swap in the commented variant below.
+# Terminal, from anywhere: `open -a` activates it rather than starting a second
+# copy, and AeroSpace follows the focus to workspace 1 on the laptop panel.
 cmd-alt-t = 'exec-and-forget open -a WezTerm'
-cmd-alt-b = "exec-and-forget open -a 'Brave Browser'"
-# cmd-alt-t = '''exec-and-forget wid=$(aerospace list-windows --all --format '%{window-id} %{app-bundle-id}' | awk '$2=="com.github.wez.wezterm"{print $1; exit}'); if [ -n "$wid" ]; then aerospace focus --window-id "$wid"; else open -a WezTerm; fi'''
-# cmd-alt-b = '''exec-and-forget wid=$(aerospace list-windows --all --format '%{window-id} %{app-bundle-id}' | awk '$2=="com.brave.Browser"{print $1; exit}'); if [ -n "$wid" ]; then aerospace focus --window-id "$wid"; else open -a 'Brave Browser'; fi'''
 
-# i3-style resize mode: alt-r in, hjkl to size, esc/enter out.
+# Peek: bring one app to the CURRENT workspace, centred, without switching
+# away from what is on screen. peek.sh moves and focuses it; Hammerspoon
+# centres it (AeroSpace cannot — see issue #9 above). Needs Hammerspoon
+# running with hs.ipc.
+cmd-alt-g = 'exec-and-forget $HOME/.config/aerospace/peek.sh com.tdesktop.Telegram peekTelegram'
+cmd-alt-s = 'exec-and-forget $HOME/.config/aerospace/peek.sh com.tinyspeck.slackmacgap peekSlack'
+cmd-alt-m = 'exec-and-forget $HOME/.config/aerospace/peek.sh com.spotify.client peekSpotify'
+
+# Monitors. The pointer follows via on-focused-monitor-changed above, so no
+# explicit move-mouse here. cmd-alt-c is pointer-only: AeroSpace's move-mouse
+# can target only the FOCUSED monitor, so moving it without moving focus is
+# Hammerspoon's job.
+cmd-alt-n = 'focus-monitor --wrap-around next'
+cmd-alt-c = 'exec-and-forget /opt/homebrew/bin/hs -c "pointerToOtherScreen()"'
+
+# Focus. Both flags matter:
+#   --boundaries all-monitors-outer-frame: the default stops at the workspace
+#     edge, so focus would never reach the other display.
+#   --ignore-floating: keeps the peek apps out of the focus path; they are
+#     meant to arrive only via their own key.
+# The built-in sits BELOW the DELL, so j/k cross monitors here, not h/l.
+cmd-alt-h = 'focus --ignore-floating --boundaries all-monitors-outer-frame left'
+cmd-alt-j = 'focus --ignore-floating --boundaries all-monitors-outer-frame down'
+cmd-alt-k = 'focus --ignore-floating --boundaries all-monitors-outer-frame up'
+cmd-alt-l = 'focus --ignore-floating --boundaries all-monitors-outer-frame right'
+
+cmd-alt-f = 'fullscreen'
+
+# Back-and-forth, on the right thumb key (`&mt RALT GRAVE`, tap = backtick).
+# focus-back-and-forth toggles the last two WINDOWS and can stay inside one
+# workspace; it fails when that window was closed (only one entry of history),
+# so it falls through to the workspace toggle, which always succeeds. Upstream
+# recommends exactly this chain. There is deliberately no separate
+# workspace-only key — the fallback already covers it.
+# Absolute path: exec PATH has no /run/current-system/sw/bin.
+cmd-alt-backtick = 'exec-and-forget /run/current-system/sw/bin/aerospace focus-back-and-forth || /run/current-system/sw/bin/aerospace workspace-back-and-forth'
+
+cmd-alt-w = 'mode win'
+cmd-alt-semicolon = 'mode service'
+
+# A mode swallows every key bound in it, globally, with no on-screen
+# indicator — a mode you cannot leave is a dead keyboard. So, in every mode:
+#   * every action is bound bare AND with cmd-alt, since holding the modifier
+#     is the natural thing to do and would otherwise do nothing;
+#   * esc / enter / w / cmd-alt-w always return to main. Do not rely on esc
+#     alone: it is `&fast_lt CODE ESC` on the Totem, and a hold over 150ms
+#     sends no esc at all;
+#   * actions return to main by themselves, except the repeatable ones.
+# Stuck anyway: `aerospace mode main` from any shell.
+[mode.win.binding]
+h = 'move left'
+j = 'move down'
+k = 'move up'
+l = 'move right'
+cmd-alt-h = 'move left'
+cmd-alt-j = 'move down'
+cmd-alt-k = 'move up'
+cmd-alt-l = 'move right'
+
+y = ['move-node-to-workspace 1', 'mode main']
+u = ['move-node-to-workspace 2', 'mode main']
+i = ['move-node-to-workspace 3', 'mode main']
+o = ['move-node-to-workspace 4', 'mode main']
+p = ['move-node-to-workspace 5', 'mode main']
+cmd-alt-y = ['move-node-to-workspace 1', 'mode main']
+cmd-alt-u = ['move-node-to-workspace 2', 'mode main']
+cmd-alt-i = ['move-node-to-workspace 3', 'mode main']
+cmd-alt-o = ['move-node-to-workspace 4', 'mode main']
+cmd-alt-p = ['move-node-to-workspace 5', 'mode main']
+
+f = ['layout floating tiling', 'mode main']
+cmd-alt-f = ['layout floating tiling', 'mode main']
+comma = ['layout accordion horizontal vertical', 'mode main']
+period = ['layout tiles horizontal vertical', 'mode main']
+cmd-alt-comma = ['layout accordion horizontal vertical', 'mode main']
+cmd-alt-period = ['layout tiles horizontal vertical', 'mode main']
+
+r = 'mode resize'
+cmd-alt-r = 'mode resize'
+
+esc = 'mode main'
+enter = 'mode main'
+w = 'mode main'
+cmd-alt-w = 'mode main'
+
+# Resize keys from upstream's i3-like example.
 [mode.resize.binding]
 h = 'resize width -50'
 j = 'resize height +50'
 k = 'resize height -50'
 l = 'resize width +50'
+cmd-alt-h = 'resize width -50'
+cmd-alt-j = 'resize height +50'
+cmd-alt-k = 'resize height -50'
+cmd-alt-l = 'resize width +50'
+
 b = ['balance-sizes', 'mode main']
+cmd-alt-b = ['balance-sizes', 'mode main']
+
 esc = 'mode main'
 enter = 'mode main'
+w = 'mode main'
+r = 'mode main'
+cmd-alt-r = 'mode main'
+cmd-alt-w = 'mode main'
 
-# Service mode: infrequent operations kept off the main keymap.
+# Infrequent operations, kept off the main keymap.
 [mode.service.binding]
-esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 f = ['layout floating tiling', 'mode main']
 backspace = ['close-all-windows-but-current', 'mode main']
+cmd-alt-r = ['flatten-workspace-tree', 'mode main']
+cmd-alt-f = ['layout floating tiling', 'mode main']
+cmd-alt-backspace = ['close-all-windows-but-current', 'mode main']
 
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-j = ['join-with down', 'mode main']
-alt-shift-k = ['join-with up', 'mode main']
-alt-shift-l = ['join-with right', 'mode main']
+h = ['join-with left', 'mode main']
+j = ['join-with down', 'mode main']
+k = ['join-with up', 'mode main']
+l = ['join-with right', 'mode main']
+cmd-alt-h = ['join-with left', 'mode main']
+cmd-alt-j = ['join-with down', 'mode main']
+cmd-alt-k = ['join-with up', 'mode main']
+cmd-alt-l = ['join-with right', 'mode main']
+
+esc = ['reload-config', 'mode main'] # esc doubles as reload
+enter = 'mode main'
+w = 'mode main'
+cmd-alt-w = 'mode main'
+cmd-alt-semicolon = 'mode main'
