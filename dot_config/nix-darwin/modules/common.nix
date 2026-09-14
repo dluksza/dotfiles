@@ -114,6 +114,7 @@
       # watchman chain and with it system-path. homebrew-core ships an
       # arm64 bottle, so nothing is built locally.
       "watchman"
+      "pi-coding-agent"
     ];
     # Casks present on every machine. Profile-specific casks are added
     # in ./flutter.nix / ./personal.nix / ../hosts/work.nix.
