@@ -116,6 +116,7 @@
       "watchman"
       "pi-coding-agent"
       "zoxide"
+      "mise"
     ];
     # Casks present on every machine. Profile-specific casks are added
     # in ./flutter.nix / ./personal.nix / ../hosts/work.nix.
