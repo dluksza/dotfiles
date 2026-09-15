@@ -115,6 +115,7 @@
       # arm64 bottle, so nothing is built locally.
       "watchman"
       "pi-coding-agent"
+      "zoxide"
     ];
     # Casks present on every machine. Profile-specific casks are added
     # in ./flutter.nix / ./personal.nix / ../hosts/work.nix.
