@@ -27,6 +27,13 @@
         inherit (prev.stdenv.hostPlatform) system;
         config.allowUnfree = true;
       }).direnv;
+      # Temp workaround: Brave 1.95.x DMG ships a `.background` dir beside
+      # `Brave Browser.app`, so unpackPhase fails with "unpacker produced
+      # multiple directories". Remove once nixpkgs sets sourceRoot upstream.
+      brave = prev.brave.overrideAttrs (old:
+        prev.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
+          sourceRoot = "Brave Browser.app";
+        });
     })
   ];
 
