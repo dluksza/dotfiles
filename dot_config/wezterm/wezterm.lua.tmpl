@@ -3,6 +3,27 @@ local wezterm = require("wezterm")
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
+{{- if eq .profile "personal" }}
+
+-- Startup layout: 5 tabs in fixed directories (personal profile only)
+local mux = wezterm.mux
+wezterm.on("gui-startup", function(cmd)
+	local home = wezterm.home_dir
+	local dirs = {
+		home,
+		home .. "/workspace/HabitChallenge2/app",
+		home .. "/ClaudeExperts/PropertyExpert",
+		home .. "/ai-assistant",
+		home,
+	}
+
+	local first_tab, _, window = mux.spawn_window({ cwd = dirs[1] })
+	for i = 2, #dirs do
+		window:spawn_tab({ cwd = dirs[i] })
+	end
+	first_tab:activate()
+end)
+{{- end }}
 
 config.window_background_opacity = 0.82
 config.font_size = 12.5
