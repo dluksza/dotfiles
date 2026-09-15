@@ -69,4 +69,4 @@ fish_add_path ~/.antigravity/antigravity/bin
 zoxide init fish | source
 
 # setup mise
-~/.local/bin/mise activate fish | source
+mise activate fish | source
