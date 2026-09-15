@@ -32,6 +32,11 @@ if status is-interactive
     bind ' ' self-insert
 
     starship init fish | source
+
+    # setup zoxide
+    zoxide init fish | source
+
+    alias z='zoxide'
 end
 
 alias jq="jaq"
@@ -64,9 +69,6 @@ end
 
 # Added by Antigravity
 fish_add_path ~/.antigravity/antigravity/bin
-
-# setup zoxide
-zoxide init fish | source
 
 # setup mise
 mise activate fish | source
