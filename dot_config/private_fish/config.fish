@@ -35,8 +35,6 @@ if status is-interactive
 
     # setup zoxide
     zoxide init fish | source
-
-    alias z='zoxide'
 end
 
 alias jq="jaq"
