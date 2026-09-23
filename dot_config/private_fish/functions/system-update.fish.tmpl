@@ -1,4 +1,10 @@
-function system-update -d "Update system: nix flake, darwin-rebuild, garbage collect, macOS updates"
+function system-update -d "Update system: Determinate Nix, nix flake, darwin-rebuild, garbage collect, macOS updates"
+    # Nix itself is installed outside nix-darwin (nix.enable = false), so
+    # flake updates never upgrade it; do it explicitly before evaluating.
+    echo "━━━ Upgrading Determinate Nix ━━━"
+    sudo determinate-nixd upgrade
+    or echo "⚠️  Determinate Nix upgrade failed, continuing with current version"
+
     echo "━━━ Updating nix flake ━━━"
     nix flake update --flake ~/.config/nix-darwin/ --commit-lock-file
     or return 1
