@@ -45,9 +45,9 @@
     "claude-code"
   ];
 
-  # OPTIONAL: give the machine a stable name on every rebuild. Left disabled
-  # so it does not fight an MDM-managed hostname. Uncomment if you want to own it.
-  # networking.computerName  = "Ziuta Work";
-  # networking.hostName      = "ziuta-work";
-  # networking.localHostName = "ziuta-work";
+  # Pin the machine name: every activation re-applies it via `scutil --set`,
+  # so any drift is reset to SHIHTZU on the next rebuild.
+  networking.computerName  = "SHIHTZU";
+  networking.hostName      = "SHIHTZU";
+  networking.localHostName = "SHIHTZU";
 }
