@@ -17,7 +17,12 @@
     "auto_start_on_launch": true,
     "burst_decode_mode": "balanced",
     "preserve_mid_system_cache": true,
-    "distributed_inference_enabled": false
+    "qwen4_gdn_decode_wide_proj": false,
+    "distributed_inference_enabled": false,
+    "max_audio_upload_size": "100MB",
+    "max_image_upload_size": "50MB",
+    "max_image_side_length": 2048,
+    "gpu_keep_warm_interval": 0.5
   },
   "model": {
     "model_dirs": [
@@ -39,7 +44,7 @@
   "scheduler": {
     "max_concurrent_requests": 3,
     "embedding_batch_size": 32,
-    "chunked_prefill": false,
+    "chunked_prefill": true,
     "prefill_priority": "context",
     "decode_fairness": true
   },
@@ -106,6 +111,7 @@
     "hermes_model": null,
     "pi_model": null,
     "copilot_model": null,
+    "dsh_model": null,
     "openclaw_tools_profile": "coding",
     "markitdown_enabled": true,
     "markitdown_expose_model": false,
@@ -123,6 +129,9 @@
   },
   "ui": {
     "language": "en"
+  },
+  "usage": {
+    "usage_history": true
   },
   "idle_timeout": {
     "idle_timeout_seconds": null
