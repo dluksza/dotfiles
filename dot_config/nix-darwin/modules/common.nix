@@ -131,8 +131,8 @@
       "1password"
       "brave-browser"
       "stats"
+      "thaw"
       "hammerspoon"
-      "jordanbaird-ice"
       "font-sf-pro"
     ];
     onActivation = {

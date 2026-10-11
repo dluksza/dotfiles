@@ -13,4 +13,10 @@
   _module.args.user = "darek";
   _module.args.uid = 501;
   _module.args.adminUser = "darek";
+
+  # Inbound SSH: key accepted by sshd for this account (1Password "DefaultSshKey").
+  # Rendered to /etc/ssh/nix_authorized_keys.d/darek via AuthorizedKeysCommand.
+  users.users.darek.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINa6Qjp40O531UAnvfZtmgOHJAfX7EHMxqdJT99Ef5i4 DefaultSshKey"
+  ];
 }

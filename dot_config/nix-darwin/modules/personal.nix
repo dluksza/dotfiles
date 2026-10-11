@@ -29,6 +29,16 @@
     ];
     brews = [
       "lima"
+      # Runtime interpreter for the omlx venv below. The formula pins
+      # depends_on "python@3.11" and the venv symlinks to
+      # /opt/homebrew/opt/python@3.11/bin/python3.11. It is listed explicitly
+      # because `brew bundle` treats an installed omlx as satisfied and never
+      # re-checks its deps: a manual `brew uninstall --ignore-dependencies
+      # python@3.11` (2026-10-10) left omlx dying at launch with
+      # "bad interpreter" and nothing to put it back. Do NOT swap in
+      # pkgs.python3 - the venv holds ~300 cpython-311 extensions built by
+      # the formula against this exact interpreter.
+      "python@3.11"
       {
         # Local MLX LLM inference server (formula, not a cask).
         #
