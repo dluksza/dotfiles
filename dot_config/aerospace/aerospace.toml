@@ -1,41 +1,54 @@
-# AeroSpace — tiling window manager. Managed by chezmoi; the launchd agent that
-# starts it lives in ~/.config/nix-darwin/modules/personal.nix.
-# Edit: `chezmoi edit ~/.config/aerospace/aerospace.toml && chezmoi apply`.
-# auto-reload-config applies changes on save — no rebuild, no restart.
+# AeroSpace — i3-like tiling window manager.
+# Managed by chezmoi; the launchd agent that starts it is declared in
+# ~/.config/nix-darwin/modules/personal.nix.
 #
-# Two constraints shape everything below, both from this machine:
-#   * macOS layout is Polish Pro, where diacritics are Option+a/c/e/l/n/o/s/x/z.
-#     AeroSpace grabs bound keys globally, so plain alt- bindings would eat
-#     ą ć ę ł ń ó ś ż ź — alt-l alone kills ł. Hence cmd-alt throughout.
-#     Cost: cmd-alt-h takes over macOS "Hide Others".
-#   * 38-key Totem (~/workspace/zmk-config-totem). cmd-alt is one ungated left
-#     pinky hold (`&mt LA(LGUI) TAB`, position 20); digits and most punctuation
-#     sit behind layers. So: workspaces are NAMED 1-5 but reached by the
-#     right-hand letters y/u/i/o/p (opposite hand from the modifier), and
-#     multi-step operations live in bare-key modes rather than deeper chords.
+# Edit with `chezmoi edit ~/.config/aerospace/aerospace.toml && chezmoi apply`.
+# auto-reload-config picks the change up on save — no rebuild, no restart.
+#
+# MODIFIER CHOICE: cmd-alt, not the community-standard plain alt.
+# Two reasons, both specific to this machine:
+#   1. The active macOS layout is Polish Pro, where the diacritics are
+#      Option+a/c/e/l/n/o/s/x/z. AeroSpace grabs bound keys globally, so
+#      alt-<letter> bindings would eat ą ć ę ł ń ó ś ż ź — note that even
+#      alt-l, in the canonical alt-h/j/k/l focus row, collides with ł.
+#   2. On the Totem (see ~/workspace/zmk-config-totem), `&mt LA(LGUI) TAB` at
+#      position 20 produces cmd-alt from one ungated pinky hold, usable against
+#      either hand. Plain alt costs a home-row mod whose
+#      hold-trigger-key-positions confine it to the opposite hand.
+# Known cost: cmd-alt-h takes over macOS "Hide Others".
+#
+# No binding may need a keyboard layer or a second modifier: on a 38-key board
+# digits, `-`, `=`, `/` and `\` all live behind layers. Hence workspaces are
+# reached by LETTER keys (y/u/i/o/p) even though they are NAMED 1-5, and
+# multi-key operations live in bare-key modes instead of chords.
 
 config-version = 2
 
-# launchd starts AeroSpace, so it must not start itself.
+# launchd (nix-darwin) starts AeroSpace, so it must not also start itself.
 start-at-login = false
 auto-reload-config = true
 
+# Keep the window tree flat and sanely oriented.
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
 default-root-container-layout = 'tiles'
-default-root-container-orientation = 'auto' # wide monitor -> horizontal
+# Wide monitor -> horizontal split, tall monitor -> vertical.
+default-root-container-orientation = 'auto'
 accordion-padding = 30
 
-# Pointer follows focus across monitors. cmd-alt-n relies on this firing.
+# Pointer follows keyboard focus across monitors.
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+# false = leave macOS cmd-h "Hide application" behavior alone.
 automatically-unhide-macos-hidden-apps = false
+
 focus-follows-mouse.enabled = false
 key-mapping.preset = 'qwerty'
 
-# Names NOT listed here stay available as stub workspaces — the placeholder a
-# monitor shows when its own workspace is summoned away.
+# Keep the five real workspaces alive when empty. Names NOT listed here stay
+# available as stub workspaces — the placeholder a monitor shows when its
+# workspace is summoned away — so keep this list to the ones bound to keys.
 persistent-workspaces = ['1', '2', '3', '4', '5']
 
 gaps.inner.horizontal = 0
@@ -45,70 +58,85 @@ gaps.outer.bottom = 0
 gaps.outer.top = 0
 gaps.outer.right = 0
 
-# Matched on bundle id (`mdls -name kMDItemCFBundleIdentifier -r /Applications/X.app`);
-# app *names* lie — Telegram's window says "Telegram", the bundle is
-# "Telegram Desktop.app". The `if = 'test %{...}'` form is current; the widely
-# copied `if.app-id` is soft-deprecated upstream.
-# Rules fire on window DETECTION only: they re-run at AeroSpace startup, but
-# never retroactively on reload. Move existing windows by hand.
+# --- Apps land on their workspace --------------------------------------
+# `if = 'test %{app-bundle-id} = ...'` is the current syntax; the widely-seen
+# `if.app-id` form is soft-deprecated upstream ("Please don't do that").
 on-window-detected = [
   { if = 'test %{app-bundle-id} = com.github.wez.wezterm', run = 'move-node-to-workspace 1' },
   { if = 'test %{app-bundle-id} = com.brave.Browser || test %{app-bundle-id} = app.zen-browser.zen', run = 'move-node-to-workspace 2' },
   { if = 'test %{app-bundle-id} = dev.zed.Zed || test %{app-bundle-id} = com.microsoft.VSCode', run = 'move-node-to-workspace 3' },
-  # Floating, and deliberately unassigned: peek.sh pulls these to whichever
-  # workspace is focused, so a pin would fight it. Floating is also what lets
-  # Hammerspoon place them — AeroSpace refuses to move or resize a floating
-  # window itself (upstream issue #9).
+  # Floating, and deliberately NOT routed to a workspace: peek.sh pulls them to
+  # whichever workspace is focused, so pinning would fight that. Floating is
+  # what lets Hammerspoon place them — AeroSpace refuses to move or resize a
+  # floating window itself (upstream issue #9).
   { if = 'test %{app-bundle-id} = com.tinyspeck.slackmacgap', run = 'layout floating' },
   { if = 'test %{app-bundle-id} = com.tdesktop.Telegram', run = 'layout floating' },
   { if = 'test %{app-bundle-id} = com.spotify.client', run = 'layout floating' },
 ]
 
-# Matching by monitor name degrades gracefully: undocked, the pattern matches
-# nothing and the assignment is simply dropped. Pinning is not free — it
-# disables summon-workspace and move-workspace-to-monitor for that workspace —
-# so 2 and 3 are pinned by choice, to keep them off the laptop even if the main
-# display changes, not because the default would place them elsewhere.
+# Matching by monitor NAME rather than 'main'/'secondary' degrades gracefully:
+# undocked, the pattern matches nothing, the assignment is dropped, and the
+# workspace falls back to normal placement. Force-assignment also forbids
+# summon-workspace on that workspace:
+#   "Can't move workspace '1' to monitor 'X'.
+#    workspace-to-monitor-force-assignment doesn't allow it"
 [workspace-to-monitor-force-assignment]
-1 = 'built-in.*' # WezTerm on the laptop panel
-2 = 'dell.*'     # Brave + Zen
-3 = 'dell.*'     # Zed + VS Code
+# ONLY workspace 1 is pinned, and only because it needs to override the
+# default. Per the guide, "all workspaces are assigned to the 'main' monitor"
+# — and the DELL is main — so pinning 2/3 to 'dell.*' would be a no-op that
+# still costs something: force-assignment disables summon-workspace and
+# move-workspace-to-monitor for that workspace. Leaving them unpinned means
+# they sit on the DELL by default but can still be pulled to the laptop.
+1 = 'built-in.*'   # WezTerm on the laptop panel, against the main-monitor default
+2 = 'dell.*'       # workspace 2 (Brave & Zen) on Dell monitor
+3 = 'dell.*'       # workspace 3 (Zed & vscode) on Dell monitor
 
 [mode.main.binding]
 
-# Workspaces, plain switches. Apps reach their workspace via on-window-detected
-# instead, so these keys never steal focus to an app you were not using.
+# --- Places: switch to the workspace AND ensure the app is running ------
+# One key per place. `open -a` matches hs.application.launchOrFocus — it
+# activates a running app rather than starting a second copy.
+# Right-hand top row, in order. Deliberately the opposite hand from the
+# cmd-alt key (position 20 on the Totem, a LEFT pinky key) — q/w/e/r/t would
+# have put cmd-alt-q on the pinky twice over.
 cmd-alt-y = 'workspace 1'
 cmd-alt-u = 'workspace 2'
 cmd-alt-i = 'workspace 3'
 cmd-alt-o = 'workspace 4'
 cmd-alt-p = 'workspace 5'
-
-# Terminal, from anywhere: `open -a` activates it rather than starting a second
-# copy, and AeroSpace follows the focus to workspace 1 on the laptop panel.
-cmd-alt-t = 'exec-and-forget open -a WezTerm'
-
-# Peek: bring one app to the CURRENT workspace, centred, without switching
-# away from what is on screen. peek.sh moves and focuses it; Hammerspoon
-# centres it (AeroSpace cannot — see issue #9 above). Needs Hammerspoon
-# running with hs.ipc.
+# --- Peek: bring one app HERE, centred, without leaving the workspace --
+# peek.sh moves the app's window to the currently focused workspace and
+# focuses it; Hammerspoon then centres it. Deliberately NOT a workspace
+# switch — the point is to answer an IM without losing what is on screen.
+# These three apps are therefore NOT pinned to any workspace.
+# Requires Hammerspoon running with hs.ipc.
 cmd-alt-g = 'exec-and-forget $HOME/.config/aerospace/peek.sh com.tdesktop.Telegram peekTelegram'
 cmd-alt-s = 'exec-and-forget $HOME/.config/aerospace/peek.sh com.tinyspeck.slackmacgap peekSlack'
 cmd-alt-m = 'exec-and-forget $HOME/.config/aerospace/peek.sh com.spotify.client peekSpotify'
+# quickly switch to terminal
+cmd-alt-t = 'exec-and-forget open -a WezTerm'
 
-# Monitors. The pointer follows via on-focused-monitor-changed above, so no
-# explicit move-mouse here. cmd-alt-c is pointer-only: AeroSpace's move-mouse
-# can target only the FOCUSED monitor, so moving it without moving focus is
-# Hammerspoon's job.
+# --- Monitors ----------------------------------------------------------
+# Focus the other monitor. The pointer follows by itself: focus-monitor changes
+# the focused monitor, which fires on-focused-monitor-changed above, which runs
+# move-mouse. Adding an explicit move-mouse here just did it twice.
 cmd-alt-n = 'focus-monitor --wrap-around next'
+# Pointer only, focus untouched. AeroSpace's move-mouse can only target the
+# FOCUSED monitor, so moving the pointer without moving focus is Hammerspoon.
+# On 'c' for Cursor — 'p' is now workspace 5.
 cmd-alt-c = 'exec-and-forget /opt/homebrew/bin/hs -c "pointerToOtherScreen()"'
 
-# Focus. Both flags matter:
-#   --boundaries all-monitors-outer-frame: the default stops at the workspace
-#     edge, so focus would never reach the other display.
-#   --ignore-floating: keeps the peek apps out of the focus path; they are
-#     meant to arrive only via their own key.
-# The built-in sits BELOW the DELL, so j/k cross monitors here, not h/l.
+# --- Focus -------------------------------------------------------------
+# `focus` defaults to `--boundaries workspace` with action `stop`, which means
+# focus would never leave the current workspace — on a two-monitor setup it
+# just dies at the edge. all-monitors-outer-frame lets it cross to the other
+# display. Note the built-in sits BELOW the DELL in the macOS arrangement, so
+# it is cmd-alt-j/k that cross monitors here, not h/l.
+#
+# --ignore-floating: "Don't perceive floating windows as part of the tree."
+# Slack/Telegram/Spotify float, and they are meant to arrive only via their
+# peek key — without this they sit in the focus path and steal a cmd-alt-j on
+# their way past.
 cmd-alt-h = 'focus --ignore-floating --boundaries all-monitors-outer-frame left'
 cmd-alt-j = 'focus --ignore-floating --boundaries all-monitors-outer-frame down'
 cmd-alt-k = 'focus --ignore-floating --boundaries all-monitors-outer-frame up'
@@ -116,28 +144,41 @@ cmd-alt-l = 'focus --ignore-floating --boundaries all-monitors-outer-frame right
 
 cmd-alt-f = 'fullscreen'
 
-# Back-and-forth, on the right thumb key (`&mt RALT GRAVE`, tap = backtick).
-# focus-back-and-forth toggles the last two WINDOWS and can stay inside one
-# workspace; it fails when that window was closed (only one entry of history),
-# so it falls through to the workspace toggle, which always succeeds. Upstream
-# recommends exactly this chain. There is deliberately no separate
-# workspace-only key — the fallback already covers it.
-# Absolute path: exec PATH has no /run/current-system/sw/bin.
+# --- Back-and-forth ----------------------------------------------------
+# backtick is the right-thumb key on the Totem (`&mt RALT GRAVE`, tap =
+# backtick), so this is one pinky + one thumb.
+#
+# focus-back-and-forth toggles the last two WINDOWS, following them across
+# workspaces. It fails when the previous window was closed — AeroSpace keeps
+# only one entry of focus history — so it falls back to the workspace toggle,
+# which per the docs "always succeeds". This `||` chain is upstream's own
+# recommendation. Absolute path: the launchd agent's PATH is minimal.
 cmd-alt-backtick = 'exec-and-forget /run/current-system/sw/bin/aerospace focus-back-and-forth || /run/current-system/sw/bin/aerospace workspace-back-and-forth'
 
+# NOTE: there is deliberately no workspace-only back-and-forth key. It was on
+# cmd-alt-b and removed as redundant: cmd-alt-backtick already falls through to
+# workspace-back-and-forth whenever focus-back-and-forth can't act. 'b' is free.
+
+# --- Modes -------------------------------------------------------------
 cmd-alt-w = 'mode win'
 cmd-alt-semicolon = 'mode service'
 
-# A mode swallows every key bound in it, globally, with no on-screen
-# indicator — a mode you cannot leave is a dead keyboard. So, in every mode:
-#   * every action is bound bare AND with cmd-alt, since holding the modifier
-#     is the natural thing to do and would otherwise do nothing;
-#   * esc / enter / w / cmd-alt-w always return to main. Do not rely on esc
-#     alone: it is `&fast_lt CODE ESC` on the Totem, and a hold over 150ms
-#     sends no esc at all;
-#   * actions return to main by themselves, except the repeatable ones.
-# Stuck anyway: `aerospace mode main` from any shell.
+# Window operations.
+#
+# LOCKOUT LESSON: a binding mode swallows every key bound in it, globally and
+# with no on-screen indicator. A mode you cannot leave is a dead keyboard.
+# Hence three defences here:
+#   1. Every action is bound BOTH bare and with cmd-alt held, so keeping the
+#      modifier down (the natural thing to do) still works instead of silently
+#      doing nothing.
+#   2. Four ways out: esc, enter, cmd-alt-w (the same chord that entered — so
+#      the mode toggles), and bare w. Note esc is `&fast_lt CODE ESC` on the
+#      Totem: a hold longer than 150ms activates the CODE layer and sends no
+#      esc at all, so never rely on esc alone.
+#   3. Every action except the moves returns to main by itself.
+# If you ever do get stuck: `aerospace mode main` from any shell.
 [mode.win.binding]
+# Move the window; stays in the mode so you can repeat.
 h = 'move left'
 j = 'move down'
 k = 'move up'
@@ -147,6 +188,7 @@ cmd-alt-j = 'move down'
 cmd-alt-k = 'move up'
 cmd-alt-l = 'move right'
 
+# Send the window to a workspace, then drop back to main.
 y = ['move-node-to-workspace 1', 'mode main']
 u = ['move-node-to-workspace 2', 'mode main']
 i = ['move-node-to-workspace 3', 'mode main']
@@ -168,12 +210,14 @@ cmd-alt-period = ['layout tiles horizontal vertical', 'mode main']
 r = 'mode resize'
 cmd-alt-r = 'mode resize'
 
+# Exits.
 esc = 'mode main'
 enter = 'mode main'
 w = 'mode main'
 cmd-alt-w = 'mode main'
 
-# Resize keys from upstream's i3-like example.
+# i3-style resize mode (keys from upstream's i3-like example), with the same
+# modifier-tolerant bindings and multiple exits as win mode.
 [mode.resize.binding]
 h = 'resize width -50'
 j = 'resize height +50'
@@ -187,6 +231,9 @@ cmd-alt-l = 'resize width +50'
 b = ['balance-sizes', 'mode main']
 cmd-alt-b = ['balance-sizes', 'mode main']
 
+# Exits. `w` bare as well as cmd-alt-w: in win mode bare w exits, and an exit
+# key that works in one mode but types a letter in another is exactly the
+# confusion that made the first lockout hard to escape.
 esc = 'mode main'
 enter = 'mode main'
 w = 'mode main'
@@ -212,7 +259,8 @@ cmd-alt-j = ['join-with down', 'mode main']
 cmd-alt-k = ['join-with up', 'mode main']
 cmd-alt-l = ['join-with right', 'mode main']
 
-esc = ['reload-config', 'mode main'] # esc doubles as reload
+# Exits. Same set as every other mode, plus esc doubling as reload-config.
+esc = ['reload-config', 'mode main']
 enter = 'mode main'
 w = 'mode main'
 cmd-alt-w = 'mode main'
