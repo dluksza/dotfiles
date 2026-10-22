@@ -96,6 +96,8 @@
       # upstream repo is `omlx`, so a plain `brew tap jundot/omlx` would
       # 404 — the flake input is what makes it resolvable.
       "jundot/homebrew-omlx" = inputs.homebrew-omlx;
+      # Resolves `incoai/tap`; splash brew declared in ./personal.nix.
+      "incoai/homebrew-tap" = inputs.homebrew-incoai;
     };
   };
 
@@ -130,7 +132,8 @@
     casks = [
       "1password"
       "brave-browser"
-      "stats"
+      # "stats"
+      "airstats"
       "thaw"
       "hammerspoon"
       "font-sf-pro"
@@ -300,9 +303,10 @@
     enable = true;
   };
 
-  programs.vim = {
-    enable = true;
-  };
+  # neovim (in systemPackages) is the only editor; macOS ships /usr/bin/vim
+  # for the `vi`/`vim` commands. programs.vim is intentionally not enabled:
+  # it would pull in pkgs.vim-full (GTK build) which is unused.
+  environment.variables.EDITOR = "nvim";
 
   programs.fish = {
     enable = true;

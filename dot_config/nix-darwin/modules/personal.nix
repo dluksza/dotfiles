@@ -26,9 +26,22 @@
         name = "jundot/omlx";
         trusted = true;
       }
+      {
+        # Inco AI tap (source pinned in ../flake.nix as homebrew-incoai,
+        # wired via nix-homebrew.taps in ./common.nix). Same tap-trust rule
+        # as jundot/omlx above: `brew install incoai/tap/splash` taps + installs
+        # in one step; here that is this tap entry plus the "splash" brew.
+        name = "incoai/tap";
+        trusted = true;
+      }
     ];
     brews = [
       "lima"
+      # Local LLM inference server (formula, prebuilt arm64 tarball). Formula
+      # requires arm64 + macOS >= 26.4; README lists M3+ and 36 GB RAM as
+      # hardware minimums, so personal-only. Not a brew service: run
+      # `splash serve --model ...` manually.
+      "splash"
       # Runtime interpreter for the omlx venv below. The formula pins
       # depends_on "python@3.11" and the venv symlinks to
       # /opt/homebrew/opt/python@3.11/bin/python3.11. It is listed explicitly

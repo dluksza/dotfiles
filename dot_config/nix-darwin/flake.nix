@@ -36,6 +36,13 @@
       url = "github:jundot/omlx";
       flake = false;
     };
+    # Inco AI tap (Formula/splash.rb). Repo follows the homebrew-<name>
+    # convention, so `brew tap incoai/tap` would resolve on its own; pinned
+    # here only so the formula version is locked like every other tap.
+    homebrew-incoai = {
+      url = "github:incoai/homebrew-tap";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, ... }:
