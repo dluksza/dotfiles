@@ -6,6 +6,7 @@
     ../modules/common.nix
     ../modules/flutter.nix
     ../modules/personal.nix
+    ../modules/omlx.nix
   ];
 
   # This machine's login account. uid 501 is the standard macOS first-user uid.

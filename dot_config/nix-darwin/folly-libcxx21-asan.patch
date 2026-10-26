@@ -1,0 +1,41 @@
+folly 2026.01.19.00 fails to compile against libc++ 21.
+
+libc++ 21 removed the _LIBCPP_HAS_ASAN / _LIBCPP_HAS_NO_ASAN macros, so the
+guard in UninitializedMemoryHacks.h falls through to its default-enabled
+branch and emits a call to __sanitizer_annotate_contiguous_container even when
+AddressSanitizer is not in use, yielding:
+
+  error: use of undeclared identifier '__sanitizer_annotate_contiguous_container'
+
+This breaks every consumer of folly::resizeWithoutInitialization (fbthrift,
+wangle, edencommon, ... and therefore watchman). Gate the annotation on the
+compiler's actual AddressSanitizer detection instead of the removed libc++
+macros.
+
+--- a/folly/memory/UninitializedMemoryHacks.h
++++ b/folly/memory/UninitializedMemoryHacks.h
+@@ -339,13 +339,17 @@
+   // enabled we need to call the appropriate annotation functions in order to
+   // stop ASAN from reporting false positives. When ASAN is disabled, the
+   // annotation function is a no-op.
+-#if defined(_LIBCPP_HAS_ASAN)
+-#define FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER _LIBCPP_HAS_ASAN
+-#elif defined(_LIBCPP_HAS_NO_ASAN)
+-#define FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER 0
+-#else
+-#define FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER 1
+-#endif
++#if defined(__has_feature)
++#if __has_feature(address_sanitizer)
++#define FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER 1
++#else
++#define FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER 0
++#endif
++#elif defined(__SANITIZE_ADDRESS__)
++#define FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER 1
++#else
++#define FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER 0
++#endif
+
+ #if FOLLY_ASAN_ANNOTATE_CONTIGUOUS_CONTAINER
+   __sanitizer_annotate_contiguous_container(

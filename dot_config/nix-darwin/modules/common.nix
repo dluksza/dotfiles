@@ -10,6 +10,8 @@
 # profile-specific additions live in ./flutter.nix, ./personal.nix
 # and the per-host files under ../hosts/.
 {
+  imports = [ ./monitoring.nix ];
+
   nix.enable = false;
   # Temp workaround: nix-darwin's HTML manual builder (rev a1fa429, current
   # master) passes `--toc-depth`, which newer nixpkgs-unstable nixos-render-docs
