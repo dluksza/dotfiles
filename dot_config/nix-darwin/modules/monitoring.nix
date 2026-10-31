@@ -1,9 +1,10 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, user, ... }:
 # Host metrics exporters scraped by VictoriaMetrics on the NAS
 # (~/workspace/homelab/monitoring). Both Macs.
 #
 #   :9100  node_exporter  (nix-darwin module; launchd daemon, own system user)
-#          + textfile collector fed by the process-metrics daemon below
+#          + textfile collector fed by the process-metrics and omlx-metrics
+#          daemons below
 #   :9101  macmon serve   (Apple Silicon power/temps/GPU; launchd daemon)
 #
 # The application firewall is on with stealth mode (common.nix) and nix
@@ -61,6 +62,40 @@ let
       }' > "$dir/process.prom.tmp"
     mv "$dir/process.prom.tmp" "$dir/process.prom"
   '';
+
+  # oMLX per-model token counters. oMLX has no /metrics endpoint; it persists
+  # all-time per-model totals to ~/.omlx/stats.json (mode 0644, rewritten at
+  # most every 300 s, on request completion). The counters only grow (a
+  # "clear all-time stats" in the admin UI resets them; increase() handles
+  # that). prompt_tokens includes cached_tokens. This is the only token source
+  # for oMLX: llama-swap routers are never scraped for tokens, so a request
+  # is counted once, by the engine that served it.
+  omlxStats = "/Users/${user}/.omlx/stats.json";
+  omlxJq = pkgs.writeText "omlx-metrics.jq" ''
+    def esc: gsub("\\\\"; "\\\\") | gsub("\""; "\\\"");
+    def counter(name; field; help):
+      "# HELP homelab_omlx_\(name) \(help)",
+      "# TYPE homelab_omlx_\(name) counter",
+      (.per_model // {} | to_entries[] |
+        "homelab_omlx_\(name){model=\"\(.key | esc)\"} \(.value[field] // 0)");
+    counter("prompt_tokens_total"; "prompt_tokens"; "Input tokens, cached included."),
+    counter("cached_tokens_total"; "cached_tokens"; "Input tokens served from the prefix cache."),
+    counter("completion_tokens_total"; "completion_tokens"; "Output tokens."),
+    counter("requests_total"; "requests"; "Completed requests."),
+    counter("prefill_seconds_total"; "prefill_duration"; "Time spent in prefill, summed over requests."),
+    counter("generation_seconds_total"; "generation_duration"; "Time spent in generation, summed over requests.")
+  '';
+  omlxMetrics = pkgs.writeShellScript "omlx-metrics" ''
+    set -eu
+    dir=${textfileDir}
+    mkdir -p "$dir"
+    if [ -r ${omlxStats} ]; then
+      ${lib.getExe pkgs.jq} -r -f ${omlxJq} ${omlxStats} > "$dir/omlx.prom.tmp"
+    else
+      : > "$dir/omlx.prom.tmp"  # no oMLX on this host
+    fi
+    mv "$dir/omlx.prom.tmp" "$dir/omlx.prom"
+  '';
 in
 {
   services.prometheus.exporters.node = {
@@ -98,6 +133,17 @@ in
       UserName = "_prometheus-node-exporter";
       GroupName = "_prometheus-node-exporter";
       StandardErrorPath = "${exporterHome}/process-metrics.log";
+    };
+  };
+
+  launchd.daemons.omlx-metrics = {
+    command = toString omlxMetrics;
+    serviceConfig = {
+      RunAtLoad = true;
+      StartInterval = 60;
+      UserName = "_prometheus-node-exporter";
+      GroupName = "_prometheus-node-exporter";
+      StandardErrorPath = "${exporterHome}/omlx-metrics.log";
     };
   };
 
