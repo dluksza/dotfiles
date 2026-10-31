@@ -55,7 +55,8 @@
     "rust-analyzer-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
     "agent-skills@addy-agent-skills": true,
-    "figma@claude-plugins-official": true
+    "figma@claude-plugins-official": true,
+    "ste-mode@anthropic-plugin-directory": true
   },
   "extraKnownMarketplaces": {
     "callstack-agent-skills": {
@@ -68,6 +69,12 @@
       "source": {
         "source": "github",
         "repo": "addyosmani/agent-skills"
+      }
+    },
+    "ctotheameron": {
+      "source": {
+        "source": "github",
+        "repo": "ctotheameron/agent-ste"
       }
     }
   },
