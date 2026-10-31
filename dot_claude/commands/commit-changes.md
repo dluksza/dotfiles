@@ -29,8 +29,7 @@ Commit changes following git commit message best practices.
 
 5. Verify with `git status` and `git log -1 --stat`.
 
-Do NOT create branch(es). Do NOT push. Do NOT commit secrets (.env, credentials).
-NEVER add a `Co-Authored-By` line or any other AI attribution trailer to the commit message.
+Do not create branches and do not push. Do not add a `Co-Authored-By` line or any other AI attribution trailer.
 </instructions>
 
 <context>
