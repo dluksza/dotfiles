@@ -61,15 +61,21 @@ let
     key=$(${jq} -r '.auth.api_key // empty' ${settings} 2>/dev/null || true)
     status=$(/usr/bin/curl -s -m 5 -H "Authorization: Bearer $key" \
       http://127.0.0.1:${toString port}/api/status 2>/dev/null || true)
-    if [ -n "$status" ]; then
-      busy=$(echo "$status" | ${jq} -r \
-        '(.active_requests // 0) + (.waiting_requests // 0) + (.models_loading // 0)' 2>/dev/null || echo 0)
-      if [ "$busy" != "0" ]; then
-        log "server busy ($busy request(s)/loads in flight); retrying later"
-        exit 0
-      fi
+
+    # Fail closed. An unreachable status or a body without the counters must
+    # read as busy, because a restart unloads live models and aborts in-flight
+    # requests. The safe answer to doubt is the next run in 5 minutes.
+    busy=1
+    if [ -z "$status" ]; then
+      log "no answer from /api/status; treating the server as busy"
     else
-      log "/api/status unreachable on loopback; restarting anyway"
+      busy=$(echo "$status" | ${jq} -r \
+        '(.active_requests // 0) + (.waiting_requests // 0) + (.models_loading // 0)' 2>/dev/null || echo 1)
+      printf '%s' "$busy" | /usr/bin/grep -Eq '^[0-9]+$' || busy=1
+    fi
+    if [ "$busy" != "0" ]; then
+      log "server busy ($busy request(s)/loads in flight); retrying later"
+      exit 0
     fi
 
     log "restarting ${label}"
@@ -99,6 +105,13 @@ in
       StandardErrorPath = "/var/log/omlx-guard.log";
     };
   };
+
+  # Log rotation. launchd appends to both files forever; the oMLX log was
+  # 20 MB with no rule on 2026-10-31. Owner matches what brew services creates.
+  environment.etc."newsyslog.d/omlx.conf".text = ''
+    /opt/homebrew/var/log/omlx.log  ${user}:admin  644  7  2048  *  NJ
+    /var/log/omlx-guard.log         root:wheel     644  5  1024  *  NJ
+  '';
 
   # postActivation runs after the `brew bundle` step, so an omlx/python bump
   # is picked up in the same `darwin-rebuild switch` that caused it.

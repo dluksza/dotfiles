@@ -40,6 +40,9 @@ accordion-padding = 30
 # Pointer follows keyboard focus across monitors.
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+# TEMPORARY diagnostic for the popup-confirm focus jump. Remove when done.
+on-focus-changed = ['exec-and-forget echo "$(date +%T.%N) $AEROSPACE_WINDOW_ID $(/run/current-system/sw/bin/aerospace list-windows --focused --format "%{app-bundle-id} | %{window-title}")" >> /tmp/aerospace-focus.log']
+
 # false = leave macOS cmd-h "Hide application" behavior alone.
 automatically-unhide-macos-hidden-apps = false
 

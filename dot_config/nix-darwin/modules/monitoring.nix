@@ -147,6 +147,14 @@ in
     };
   };
 
+  # Log rotation for the exporter logs. process-metrics and omlx-metrics write
+  # their stderr to the same directory, and launchd appends forever.
+  environment.etc."newsyslog.d/monitoring.conf".text = ''
+    /var/lib/prometheus-node-exporter/macmon.log           _prometheus-node-exporter:_prometheus-node-exporter 644 3 512 * NJ
+    /var/lib/prometheus-node-exporter/process-metrics.log  _prometheus-node-exporter:_prometheus-node-exporter 644 3 512 * NJ
+    /var/lib/prometheus-node-exporter/omlx-metrics.log     _prometheus-node-exporter:_prometheus-node-exporter 644 3 512 * NJ
+  '';
+
   system.activationScripts.postActivation.text = ''
     echo "monitoring: allowing exporters through the application firewall" >&2
     for bin in ${nodeExporterBin} ${macmonBin}; do
