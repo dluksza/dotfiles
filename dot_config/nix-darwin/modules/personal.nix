@@ -7,7 +7,8 @@
     doppler
     devenv
     rustup
-    aerospace # tiling WM; agent + config notes below
+    # aerospace: NOT the nixpkgs release. A build of upstream main runs from
+    # ~/Applications/aerospace-main (see the launchd agent below).
   ];
 
   homebrew = {
@@ -111,9 +112,19 @@
   #
   # launchd owns startup, so aerospace.toml keeps `start-at-login = false`.
   # AeroSpace needs macOS Accessibility permission; expect a re-prompt after
-  # version bumps, since the store path changes.
+  # each rebuild of the app, since the ad hoc signature changes.
+  #
+  # Since 2026-11-04 the app is a local build of upstream main (native tab
+  # groups as one window, 1Password focus patch), built from
+  # ~/workspace/aerospace per BUILD-LOCAL.md there and copied to
+  # ~/Applications/aerospace-main. Its CLI is linked as ~/.local/bin/aerospace
+  # and aerospace.toml / peek.sh call it by that path, because the CLI must
+  # match the server build. To go back to the nixpkgs release: restore
+  # `aerospace` in systemPackages, point `command` at
+  # "${pkgs.aerospace}/Applications/AeroSpace.app/Contents/MacOS/AeroSpace",
+  # and switch the two config paths back to /run/current-system/sw/bin/aerospace.
   launchd.user.agents.aerospace = {
-    command = "${pkgs.aerospace}/Applications/AeroSpace.app/Contents/MacOS/AeroSpace";
+    command = "/Users/darek/Applications/aerospace-main/AeroSpace.app/Contents/MacOS/AeroSpace";
     serviceConfig = {
       KeepAlive = true;
       RunAtLoad = true;

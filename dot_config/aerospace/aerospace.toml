@@ -153,7 +153,7 @@ cmd-alt-f = 'fullscreen'
 # only one entry of focus history — so it falls back to the workspace toggle,
 # which per the docs "always succeeds". This `||` chain is upstream's own
 # recommendation. Absolute path: the launchd agent's PATH is minimal.
-cmd-alt-backtick = 'exec-and-forget /run/current-system/sw/bin/aerospace focus-back-and-forth || /run/current-system/sw/bin/aerospace workspace-back-and-forth'
+cmd-alt-backtick = 'exec-and-forget $HOME/Applications/aerospace-main/bin/aerospace focus-back-and-forth || $HOME/Applications/aerospace-main/bin/aerospace workspace-back-and-forth'
 
 # NOTE: there is deliberately no workspace-only back-and-forth key. It was on
 # cmd-alt-b and removed as redundant: cmd-alt-backtick already falls through to

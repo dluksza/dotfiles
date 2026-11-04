@@ -14,7 +14,7 @@
 # usage: peek.sh <app-bundle-id> <hammerspoon-function-name>
 set -u
 
-AEROSPACE=/run/current-system/sw/bin/aerospace
+AEROSPACE="$HOME/Applications/aerospace-main/bin/aerospace"
 HS=/opt/homebrew/bin/hs
 
 bundle_id=${1:?usage: peek.sh <bundle-id> <hs-function>}
