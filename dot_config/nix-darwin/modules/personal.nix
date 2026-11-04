@@ -64,6 +64,13 @@
         name = "omlx";
         args = [ "with-custom-kernel" ];
       }
+      # Toolchain for building AeroSpace from `main` (clone in
+      # ~/workspace/aerospace, steps in BUILD-LOCAL.md there). swiftly is the
+      # Swift toolchain manager the AeroSpace build scripts require; it is not
+      # in nixpkgs. xcbeautify is optional (readable xcodebuild logs). Listed
+      # here because onActivation cleanup = "zap" removes unlisted brews.
+      "swiftly"
+      "xcbeautify"
     ];
     casks = [
       "synology-drive"
