@@ -8,6 +8,7 @@
     ../modules/personal.nix
     ../modules/omlx.nix
     ../modules/desktop-inference.nix
+    ../modules/dns.nix
   ];
 
   # This machine's login account. uid 501 is the standard macOS first-user uid.
