@@ -29,13 +29,6 @@
         inherit (prev.stdenv.hostPlatform) system;
         config.allowUnfree = true;
       }).direnv;
-      # Temp workaround: Brave 1.95.x DMG ships a `.background` dir beside
-      # `Brave Browser.app`, so unpackPhase fails with "unpacker produced
-      # multiple directories". Remove once nixpkgs sets sourceRoot upstream.
-      brave = prev.brave.overrideAttrs (old:
-        prev.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
-          sourceRoot = "Brave Browser.app";
-        });
     })
   ];
 
@@ -178,10 +171,6 @@
       orientation = "right";
       show-recents = false;
       tilesize = 28;
-      # Apps shared on every machine. Personal adds Obsidian in ./personal.nix.
-      persistent-apps = [
-        "${pkgs.brave}/Applications/Brave Browser.app/"
-      ];
       wvous-bl-corner = 1; # Disabled
       wvous-br-corner = 1; # Disabled
       wvous-tr-corner = 1; # Disabled
@@ -259,10 +248,6 @@
     };
   };
   system.activationScripts.postActivation.text = ''
-    for cask in zed brave-browser; do
-      brew pin "$cask" 2>/dev/null || true
-    done
-
     # Add Stats and Ice as login items (idempotent — skips if already present)
     for app in "Stats" "Ice"; do
       if ! osascript -e "tell application \"System Events\" to get the name of every login item" 2>/dev/null | grep -q "$app"; then
