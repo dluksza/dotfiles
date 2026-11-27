@@ -8,3 +8,10 @@ bootstrap.sh
 .aws
 .saml2aws
 {{- end }}
+
+{{- /* Another app's sandbox container is TCC-protected: even the terminal cannot
+       read it without Full Disk Access, so chezmoi failed with
+       "operation not permitted" on every status/diff/apply. Maccy owns its own
+       preferences now. (If they ever need pinning, do it in nix-darwin via
+       CustomUserPreferences, not here.) */}}
+Library/Containers/org.p0deje.Maccy
