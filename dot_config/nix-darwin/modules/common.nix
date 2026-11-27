@@ -37,7 +37,6 @@
     chezmoi
     uutils-coreutils-noprefix
     ripgrep
-    fish
     age
     git
     git-lfs
@@ -51,7 +50,13 @@
     lua
     nil
     tree-sitter
-    wezterm
+    # wezterm is deliberately NOT here: it comes from the Homebrew cask below.
+    # The nix build is ad-hoc signed (codesign: flags=0x2(adhoc), no Team ID), so
+    # TCC pins its cdhash and every nixpkgs bump made macOS forget the Full Disk
+    # Access grant on the terminal. The cask is upstream-signed with a stable
+    # identity, so one grant survives updates. Nothing here calls the `wezterm`
+    # CLI (only `open -a WezTerm`, the bundle id, and Hammerspoon launchOrFocus),
+    # so dropping the package costs nothing.
     zinit
     fzf
     xh
@@ -132,6 +137,20 @@
       "thaw"
       "hammerspoon"
       "font-sf-pro"
+      # Stable code identity => the Full Disk Access grant on the terminal
+      # survives updates (see the note in environment.systemPackages above).
+      #
+      # The @nightly cask is the right one here, not the plain `wezterm` cask:
+      #  - same build line as the nix package this replaces (nixpkgs was on
+      #    0-unstable-2026-11-20; the plain cask is frozen at 20240203, i.e. a
+      #    ~2-year downgrade).
+      #  - verified signed: Developer ID Application: Wesley FURLONG
+      #    (P4A6FU9KZ3), hardened runtime, timestamped — so TCC keys on
+      #    team+bundle-id instead of a cdhash that changed on every rebuild.
+      #  - ships the `wezterm` / `wezterm-gui` / `wezterm-mux-server` /
+      #    `strip-ansi-escapes` CLI binaries; the plain cask does not.
+      # conflicts_with the plain cask, so never declare both.
+      "wezterm@nightly"
     ];
     onActivation = {
       cleanup = "zap";
@@ -295,14 +314,63 @@
   # it would pull in pkgs.vim-full (GTK build) which is unused.
   environment.variables.EDITOR = "nvim";
 
-  programs.fish = {
+  # zsh (from nixpkgs) is the login shell on every host. nix-darwin's
+  # programs.zsh.enable already defaults to true — it puts pkgs.zsh in
+  # systemPackages and generates /etc/zshenv, /etc/zprofile and /etc/zshrc —
+  # so the options below are spelled out explicitly instead of relying on that
+  # default, and they decide what the generated /etc/zshrc does and does not do.
+  #
+  # Interactive configuration lives in ~/.zshrc (chezmoi), not here: aliases
+  # and prompt tweaks there cost no rebuild.
+  programs.zsh = {
     enable = true;
+
+    # Completion: /etc/zshenv adds the nix profiles' share/zsh/site-functions
+    # to $fpath (that is pkgs.nix-zsh-completions: darwin-rebuild, nix, etc.).
+    enableCompletion = true;
+
+    # compinit is deliberately left to ~/.zshrc, for ordering only: /etc/zshrc
+    # runs before ~/.zshrc, so a compinit here would build the completion table
+    # before zinit has put its plugin completions on $fpath. ~/.zshrc calls
+    # compinit once, after the plugins. (This used to be justified with a
+    # "compdump hangs" note and a `compinit -D` workaround; -D actually forces a
+    # full 2811-file $fpath rescan on every shell — 230 ms vs 118 ms — so it is
+    # gone.) enableBashCompletion must stay off too: bashcompinit needs compinit
+    # to have run first, and /etc/zshrc runs before ~/.zshrc.
+    enableGlobalCompInit = false;
+    enableBashCompletion = false;
+
+    # Plugins sourced by /etc/zshrc, i.e. before ~/.zshrc. Versions are pinned
+    # by the flake and nothing is fetched from the network at shell start.
+    enableAutosuggestions = true;
+    enableSyntaxHighlighting = true;
+    enableFzfCompletion = true; # tab / ** completion via pkgs.fzf
+    enableFzfHistory = true;    # Ctrl-R
+    enableFzfGit = true;        # Ctrl-G git browser
+
+    histSize = 5000;
+    saveSize = 5000;
+
+    # Default is `prompt suse`; starship owns the prompt from ~/.zshrc.
+    promptInit = "";
   };
+
+  # pkgs.zinit ships share/zinit/zinit.zsh, but nix-darwin only links /bin and
+  # /share/locale by default (plus /share/zsh from programs.zsh above), so the
+  # file would stay unreachable in the store. ~/.zshrc sources it from
+  # /run/current-system/sw/share/zinit/zinit.zsh.
+  environment.pathsToLink = [ "/share/zinit" ];
+
+  # /etc/shells: /bin/zsh is listed by macOS, the nix zsh is not, and chsh /
+  # System Settings > Users & Groups refuse a shell that is not listed.
+  # types.shellPackage maps pkgs.zsh to /run/current-system/sw/bin/zsh, which
+  # survives nixpkgs bumps (a raw store path would not).
+  environment.shells = [ pkgs.zsh ];
 
   users.knownUsers = [ user ];
   users.users.${user} = {
     uid = uid;
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
   nix.settings.trusted-users = [ user ];
 

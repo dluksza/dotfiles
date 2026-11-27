@@ -1,0 +1,206 @@
+# ~/.zshrc — interactive zsh configuration.
+# chezmoi source: dot_zshrc.tmpl (templated only for the nix-darwin profile name)
+#
+# The login shell is pkgs.zsh, installed by nix-darwin
+# (~/.config/nix-darwin/modules/common.nix). By the time this file runs, zsh has
+# already read:
+#   /etc/zshenv     nix environment; $fpath gets the nix profile completions
+#   ~/.zshenv       PATH, ANDROID_HOME / JAVA_HOME, toolchain homes
+#   /etc/zprofile   (login only)
+#   ~/.zprofile     (login only) swiftly
+#   /etc/zshrc      history settings, brew shellenv, direnv hook,
+#                   zsh-autosuggestions, zsh-syntax-highlighting, fzf key binds
+# Everything below is interactive-only by design.
+
+# ─── plugins ─────────────────────────────────────────────────────────────────
+# zinit comes from nix (pkgs.zinit, linked into the system profile by
+# environment.pathsToLink in modules/common.nix). Only what nix does not ship is
+# pulled here; those plugins are cloned into ~/.local/share/zinit on first use.
+# Guarded so this file stays usable before the first rebuild that links it.
+if [[ -r /run/current-system/sw/share/zinit/zinit.zsh ]]; then
+  source /run/current-system/sw/share/zinit/zinit.zsh
+  autoload -Uz _zinit
+  (( ${+_comps} )) && _comps[zinit]=_zinit
+
+  # OMZP::git restores the oh-my-zsh git aliases (the fish setup carried a full
+  # copy of them in conf.d/git_aliases.fish). Highlighting, autosuggestions and
+  # fzf bindings come from nix and are already loaded by /etc/zshrc.
+  #
+  # Caveat: OMZP:: only sources plugins/<name>/<name>.plugin.zsh, not
+  # oh-my-zsh's lib/git.zsh. zinit ships git_main_branch/git_develop_branch/
+  # _git_log_prettily itself, but NOT git_current_branch — which ggpull/ggpush/
+  # ggsup call — so it is defined in the git-helpers section below.
+  zinit lucid for \
+    blockf atpull'zinit creinstall -q .' \
+    zsh-users/zsh-completions \
+    OMZP::git \
+    OMZP::flutter \
+    OMZP::alias-finder
+fi
+
+# ─── completion ──────────────────────────────────────────────────────────────
+# Runs after zinit so the plugin completions are already on $fpath. That
+# ordering is the whole reason nix-darwin's global compinit is off
+# (modules/common.nix): /etc/zshrc runs before this file.
+#
+# No -D flag. `compinit -D` does not "skip the dump file" as its comment here
+# used to claim: it sets _i_autodump=0, which forbids *reading and writing* the
+# dump, so every shell rescans all 2811 files in $fpath (zsh-completions alone
+# is ~2.8k). Measured on this machine: -D 230 ms vs 118 ms with the dump.
+# Plain `compinit` loads ~/.zcompdump, validates its header, and runs compaudit
+# (the check that no world-writable dir is in $fpath) — keep that check; -C
+# skips it for only ~12 ms more.
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu no
+
+# ─── history ─────────────────────────────────────────────────────────────────
+# Sizes and HISTFILE come from /etc/zshrc (programs.zsh.histSize = 5000).
+setopt appendhistory sharehistory hist_ignore_all_dups hist_save_no_dups \
+       hist_find_no_dups hist_verify
+
+# fish has no `!` history expansion; zsh does, and it also fires inside double
+# quotes (`echo "hi!"`), which bites when pasting commit messages. Off = parity.
+unsetopt banghist
+
+# ─── prompt ──────────────────────────────────────────────────────────────────
+# starship (nix) renders with ~/.config/starship.toml. Its init installs precmd
+# hooks and sets PROMPT='$(starship prompt …)' under promptsubst. The old
+# "starship hangs in zsh" note no longer reproduces on pkgs.zsh 5.9.2.
+eval "$(starship init zsh)"
+
+# ─── tool integrations ───────────────────────────────────────────────────────
+eval "$(zoxide init zsh)"     # zoxide (brew) — `z`, `zi`
+eval "$(mise activate zsh)"   # mise (brew) — keep last: it prepends its shims
+
+# gpg pinentry needs to know the terminal (was `set -g GPG_TTY $(tty)` in fish).
+export GPG_TTY=$(tty)
+
+# ─── aliases ─────────────────────────────────────────────────────────────────
+# Flutter / Dart through fvm
+alias f='fvm flutter'
+alias d='fvm dart'
+alias dart='fvm dart'
+alias fr='fvm flutter run'
+alias ft='fvm flutter test'
+alias fat='fvm flutter attach'
+
+# Editors / tools
+alias c='claude'
+alias vi='nvim'
+alias v='vi'
+alias jq='jaq'
+
+# melos
+alias mls='melos'
+alias mlsck='melos check'
+alias mlsbs='melos bootstrap'
+
+# OMZP::git above already provides, with the same behaviour as the fish set:
+#   gpf (git push --force-with-lease --force-if-includes — safer than the fish
+#        `gpf!` = --force), gdv, gignored, glp, grt, gtl, grename, gunwip, gwip
+#        (OMZ's gwip message is "--wip-- [skip ci]").
+# Redefining any of those as functions would collide with an alias and abort this
+# file at parse time, so only what OMZ lacks is defined below.
+
+# ─── git helpers ─────────────────────────────────────────────────────────────
+# Ported from the fish functions/ set (jhillyerd plugin-git).
+
+# OMZP::git does not load oh-my-zsh's lib/git.zsh, so this helper — used by the
+# ggpull / ggpush / ggsup aliases — has to be provided. Same output as OMZ's
+# version, and the same role as __git.current_branch in the fish setup.
+git_current_branch() {
+  local branch
+  branch=$(command git symbolic-ref --quiet --short HEAD 2>/dev/null) ||
+    branch=$(command git rev-parse --short HEAD 2>/dev/null) || return
+  print -r -- "$branch"
+}
+
+__git_default_branch() {
+  command git rev-parse --git-dir &>/dev/null || return
+  local default_branch
+  default_branch=$(command git config --get init.defaultBranch)
+  if [[ -n $default_branch ]] &&
+     command git show-ref -q --verify "refs/heads/$default_branch"; then
+    print -r -- $default_branch
+  elif command git show-ref -q --verify refs/heads/main; then
+    print -r -- main
+  else
+    print -r -- master
+  fi
+}
+
+gbage() {
+  git for-each-ref --sort=committerdate refs/heads/ \
+    --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+}
+
+gbda() {
+  # Delete branches merged into HEAD, including squashed ones.
+  git branch --merged |
+    command grep -vE '^\*|^\+|^[[:space:]]*(master|main|develop)[[:space:]]*$' |
+    xargs -n 1 git branch -d
+
+  local default_branch
+  default_branch=$(__git_default_branch) || return 0
+  local branch merge_base
+  for branch in $(git for-each-ref refs/heads/ --format='%(refname:short)'); do
+    merge_base=$(git merge-base $default_branch $branch) || continue
+    if [[ $(git cherry $default_branch \
+              $(git commit-tree ${branch}^{tree} -p $merge_base -m _)) == -* ]]; then
+      git branch -D $branch
+    fi
+  done
+}
+
+gtest() {
+  # Run a command against staged changes only (no OMZ equivalent).
+  git stash push -q --keep-index --include-untracked || return
+  command "$@"
+  local cmdstatus=$?
+  # reset + restore is required to prevent merge conflicts when popping
+  git reset -q
+  git restore .
+  git stash pop -q --index
+  local popstatus=$?
+  (( popstatus == 0 )) || return $popstatus
+  return $cmdstatus
+}
+
+# ─── nix-darwin helpers ──────────────────────────────────────────────────────
+# The profile name is baked in by chezmoi from [data] profile in chezmoi.toml.
+rebuild() {
+  sudo darwin-rebuild switch --flake ~/.config/nix-darwin/#{{ .profile }} "$@"
+}
+
+system-update() {
+  # Nix itself is installed outside nix-darwin (nix.enable = false), so flake
+  # updates never upgrade it; do it explicitly before evaluating.
+  print -r -- '━━━ Upgrading Determinate Nix ━━━'
+  sudo determinate-nixd upgrade ||
+    print -r -- '⚠️  Determinate Nix upgrade failed, continuing with current version'
+
+  print -r -- '━━━ Updating nix flake ━━━'
+  nix flake update --flake ~/.config/nix-darwin/ --commit-lock-file || return 1
+
+  print -r -- '━━━ Rebuilding system ━━━'
+  sudo darwin-rebuild switch --flake ~/.config/nix-darwin/#{{ .profile }} \
+    --refresh --verbose --show-trace || return 1
+
+  print -r -- '━━━ Garbage collecting ━━━'
+  nix-collect-garbage -d
+
+  print -r -- '━━━ macOS updates ━━━'
+  softwareupdate -i -a
+
+  print -r -- '━━━ Syncing flake lock ━━━'
+  # Sync ONLY the generated flake.lock from the deployed flake. Never
+  # `chezmoi re-add` here: it re-imports every managed file and silently
+  # reverts un-applied source edits (this clobbered hosts/*.nix repeatedly).
+  cp ~/.config/nix-darwin/flake.lock ~/.local/share/chezmoi/dot_config/nix-darwin/flake.lock
+  git -C ~/.local/share/chezmoi add dot_config/nix-darwin/flake.lock
+  git -C ~/.local/share/chezmoi diff --cached --quiet ||
+    git -C ~/.local/share/chezmoi commit -m 'Update nix flake lock'
+  git -C ~/.local/share/chezmoi push
+
+  print -r -- '━━━ Done ✅ ━━━'
+}

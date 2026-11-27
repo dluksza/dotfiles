@@ -1,0 +1,8 @@
+# ~/.zprofile — login shells only (once per Terminal window).
+# chezmoi source: dot_zprofile
+#
+# PATH itself lives in ~/.zshenv; this file only holds what is genuinely
+# login-only. /etc/zprofile (nix-darwin generated) has already run.
+
+# swiftly — Swift toolchain manager (brew install swiftly)
+[ -s "$HOME/.swiftly/env.sh" ] && . "$HOME/.swiftly/env.sh"
